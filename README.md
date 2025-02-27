@@ -1,4 +1,4 @@
-This is the readme for my poertfolio website :)
+This is the readme for my portfolio website :)
 
 
 
