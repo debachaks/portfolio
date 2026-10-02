@@ -81,6 +81,59 @@
     .stat-number {
       font-variant-numeric: tabular-nums;
     }
+
+    /* News */
+    .news-item {
+      transition: background-color 0.2s ease;
+    }
+    .news-item:hover {
+      background-color: rgba(59,130,246,0.06);
+    }
+    .news-extra {
+      display: none;
+    }
+    .news-expanded .news-extra {
+      display: flex;
+    }
+    .pulse-dot {
+      position: relative;
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background: #34d399;
+    }
+    .pulse-dot::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      background: #34d399;
+      animation: pulse-ring 1.8s ease-out infinite;
+    }
+    @keyframes pulse-ring {
+      0%   { transform: scale(1);   opacity: 0.7; }
+      100% { transform: scale(2.8); opacity: 0; }
+    }
+
+    /* Hackathons */
+    .hack-card {
+      position: relative;
+      overflow: hidden;
+    }
+    .hack-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: linear-gradient(90deg, #f59e0b, #fbbf24, #f59e0b);
+    }
+    .hack-card:hover {
+      box-shadow: 0 12px 28px -8px rgba(245,158,11,0.35);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .pulse-dot::after { animation: none; }
+    }
   </style>
 </head>
 
@@ -107,12 +160,14 @@
     <!-- NAV -->
     <nav class="my-10 w-full">
       <ul class="space-y-4">
+        <li><a href="#news" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>News</a></li>
         <li><a href="#about" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>About</a></li>
         <li><a href="#education" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>Education</a></li>
         <li><a href="#experience" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>Experience</a></li>
         <li><a href="#publications" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>Publications</a></li>
         <li><a href="#skills" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>Skills</a></li>
         <li><a href="#projects" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>Projects</a></li>
+        <li><a href="#hackathons" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>Hackathons</a></li>
         <li><a href="#awards" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>Awards</a></li>
       </ul>
     </nav>
@@ -157,6 +212,91 @@
 <!-- ================= MAIN CONTENT ================= -->
 <main class="md:w-2/3 p-4 md:p-12">
 
+<!-- NEWS -->
+<!-- To add an update: copy a news-item block to the top of the list and move the "New" badge to it.
+     Only the first 4 items show by default; give older ones the class "news-extra" so they stay hidden until "Show more". -->
+<section id="news" class="mb-16 scroll-mt-24">
+  <div class="reveal bg-slate-800/60 backdrop-blur border border-slate-700/60 p-8 rounded-2xl shadow-xl shadow-black/30">
+    <div class="flex items-center justify-between mb-2">
+      <h2 class="text-2xl font-bold text-white">News</h2>
+      <span class="flex items-center gap-2 text-xs text-emerald-300">
+        <span class="pulse-dot"></span>Latest updates
+      </span>
+    </div>
+    <div class="h-px bg-slate-700 mb-4"></div>
+
+    <ul id="news-list" class="divide-y divide-slate-700/60">
+      <li class="news-item flex gap-4 py-3 px-2 rounded-lg">
+        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">Sep 2026</span>
+        <p class="text-sm text-slate-300">
+          <span class="mr-1">🥈</span>Won <strong class="text-slate-100">2nd place</strong> at the <a href="#hackathons" class="text-slate-100 font-semibold underline decoration-blue-500/50 hover:text-blue-300">AI Investment Spark Challenge</a> (TIAA × ASU × AWS) with <em>FundSentinel</em>, a 14-agent AI fund-approval committee.
+          <span class="ml-1 text-[10px] font-bold uppercase tracking-wide bg-emerald-500/15 text-emerald-300 px-1.5 py-0.5 rounded">New</span>
+        </p>
+      </li>
+      <li class="news-item flex gap-4 py-3 px-2 rounded-lg">
+        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">Sep 2026</span>
+        <p class="text-sm text-slate-300">
+          <span class="mr-1">🎤</span>Presented our paper on <em>zero-label anomaly detection and forensic attribution for RISC-V devices</em> at <strong class="text-slate-100">IEEE CAMAD 2026</strong>.
+        </p>
+      </li>
+      <li class="news-item flex gap-4 py-3 px-2 rounded-lg">
+        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">Aug 2026</span>
+        <p class="text-sm text-slate-300">
+          <span class="mr-1">🎓</span>Started my <strong class="text-slate-100">Ph.D. in Computer Engineering</strong> at Arizona State University.
+        </p>
+      </li>
+      <li class="news-item flex gap-4 py-3 px-2 rounded-lg">
+        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">May 2026</span>
+        <p class="text-sm text-slate-300">
+          <span class="mr-1">🎓</span>Completed my <strong class="text-slate-100">M.S. in Computer Engineering</strong> at ASU with a 4.0 GPA.
+        </p>
+      </li>
+      <li class="news-item news-extra gap-4 py-3 px-2 rounded-lg">
+        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">May 2026</span>
+        <p class="text-sm text-slate-300">
+          <span class="mr-1">🎤</span>Presented our paper on <em>game-theoretic over-the-air computation for crowdsensing</em> at <strong class="text-slate-100">IEEE ICC 2026</strong>.
+        </p>
+      </li>
+      <li class="news-item news-extra gap-4 py-3 px-2 rounded-lg">
+        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">Apr 2026</span>
+        <p class="text-sm text-slate-300">
+          <span class="mr-1">📄</span>Paper accepted at <strong class="text-slate-100">IEEE CAMAD 2026</strong>.
+        </p>
+      </li>
+      <li class="news-item news-extra gap-4 py-3 px-2 rounded-lg">
+        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">Jan 2026</span>
+        <p class="text-sm text-slate-300">
+          <span class="mr-1">📄</span>Paper accepted at <strong class="text-slate-100">IEEE ICC 2026</strong>.
+        </p>
+      </li>
+      <li class="news-item news-extra gap-4 py-3 px-2 rounded-lg">
+        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">Sep 2025</span>
+        <p class="text-sm text-slate-300">
+          <span class="mr-1">🏆</span>Received the <strong class="text-slate-100">Herbold Graduate Engineering Scholarship</strong>.
+        </p>
+      </li>
+      <li class="news-item news-extra gap-4 py-3 px-2 rounded-lg">
+        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">May 2025</span>
+        <p class="text-sm text-slate-300">
+          <span class="mr-1">🔬</span>Joined the <strong class="text-slate-100">PROTON Lab</strong> at ASU as a Graduate Research Associate.
+        </p>
+      </li>
+      <li class="news-item news-extra gap-4 py-3 px-2 rounded-lg">
+        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">Aug 2024</span>
+        <p class="text-sm text-slate-300">
+          <span class="mr-1">🏆</span>Awarded the <strong class="text-slate-100">Engineering Graduate Fellowship</strong> by the Ira A. Fulton Schools of Engineering.
+        </p>
+      </li>
+    </ul>
+
+    <button id="news-toggle" type="button"
+            class="mt-4 text-sm font-medium text-blue-400 hover:text-blue-300 transition">
+      Show more ↓
+    </button>
+  </div>
+</section>
+
+
 <!-- ABOUT -->
 <section id="about" class="mb-16 scroll-mt-24">
   <div class="reveal bg-slate-800/60 backdrop-blur border border-slate-700/60 p-8 rounded-2xl shadow-xl shadow-black/30">
@@ -165,16 +305,25 @@
     <h2 class="text-3xl font-bold mb-2 text-white">About</h2>
     <div class="h-1 w-full bg-gradient-to-r from-blue-500 via-blue-500/30 to-transparent rounded-full mb-6"></div>
 
-    <!-- Role -->
-    <h3 class="text-xl font-semibold mb-1 text-slate-100">
-      PhD Student &amp; Graduate Research Assistant
-    </h3>
-    <p class="text-slate-400 mb-8">
-      Performance and Resource Optimization in Networks (PROTON) Lab, Arizona State University
+    <!-- Bio -->
+    <p class="text-slate-300 leading-relaxed text-lg mb-6">
+      I'm a PhD student in Computer Engineering at Arizona State University, advised by
+      <a href="https://sites.google.com/view/eirini-eleni-tsiropoulou/home?authuser=0" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300">Dr. Eirini Eleni Tsiropoulou</a>
+      in the <span class="text-blue-400 font-semibold">PROTON Lab</span>.
+      My research focuses on machine learning for detecting and diagnosing faults and attacks in
+      microprocessors, with secondary work on resource optimization in wireless networks.
     </p>
 
+    <!-- Interests -->
+    <div class="flex flex-wrap gap-3 mb-8">
+      <span class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-medium">Machine Learning</span>
+      <span class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-medium">Hardware Fault Detection</span>
+      <span class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-medium">Resilient Computing</span>
+      <span class="px-4 py-1.5 rounded-full bg-slate-700/40 border border-slate-600/50 text-slate-400 text-sm font-medium">Network Optimization</span>
+    </div>
+
     <!-- Stats -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div class="text-center bg-blue-500/10 border border-blue-500/10 rounded-xl py-5 px-2">
         <p class="stat-number text-3xl font-extrabold text-blue-400" data-count="4.0" data-decimals="1">0.0</p>
         <p class="text-xs uppercase tracking-wide text-slate-500 mt-1">GPA</p>
@@ -191,55 +340,6 @@
         <p class="stat-number text-3xl font-extrabold text-blue-400" data-count="3">0</p>
         <p class="text-xs uppercase tracking-wide text-slate-500 mt-1">Awards</p>
       </div>
-    </div>
-
-    <!-- Interests -->
-    <h4 class="text-2xl font-semibold mb-4 text-slate-100">Interests</h4>
-    <div class="flex flex-wrap gap-4 mb-10">
-      <span class="px-6 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 font-medium">
-        Machine Learning
-      </span>
-      <span class="px-6 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 font-medium">
-        Signal Processing
-      </span>
-      <span class="px-6 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 font-medium">
-        Communication Networks
-      </span>
-      <span class="px-6 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 font-medium">
-        Deep Learning
-      </span>
-    </div>
-
-    <!-- City & Email -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-10">
-      <div>
-        <p class="text-sm uppercase tracking-wide text-slate-500 mb-1">City</p>
-        <p class="text-lg font-medium text-slate-200">
-          Tempe, Arizona, United States
-        </p>
-      </div>
-      <div>
-        <p class="text-sm uppercase tracking-wide text-slate-500 mb-1">Email</p>
-        <p class="text-lg font-medium text-slate-200">
-          debaleena82001@gmail.com
-        </p>
-      </div>
-    </div>
-
-    <!-- Bio -->
-    <div class="space-y-6 text-slate-300 leading-relaxed text-lg">
-      <p>
-        I am a PhD student in the School of Electrical, Computer and Energy Engineering at
-        Arizona State University and a member of the Performance and Resource Optimization
-        in Networks (<span class="text-blue-400 font-semibold">PROTON Lab</span>),
-        advised by <span class="text-blue-400"><a href="https://sites.google.com/view/eirini-eleni-tsiropoulou/home?authuser=0">Dr. Eirini Eleni Tsiropoulou</a></span>.
-        I completed my M.S. in Computer Engineering at ASU and my B.Tech. in Electronics &amp; Communication Engineering from IIIT Guwahati.
-      </p>
-
-      <p>
-        I am a researcher with a strong interest in applied machine learning, having worked on EEG-based seizure classification and network optimization using over-the-air techniques.
-        I am now focusing on leveraging machine learning for fault-tolerant and resilient computing systems, bridging my prior experience with future research directions.
-      </p>
     </div>
 
   </div>
@@ -509,6 +609,50 @@
 </section>
 
 
+<!-- HACKATHONS -->
+<!-- To add another win: copy the hack-card block. Use md:grid-cols-2 on the grid once there are two or more cards. -->
+<section id="hackathons" class="mb-16 scroll-mt-24">
+  <div class="reveal bg-slate-800/60 backdrop-blur border border-slate-700/60 p-8 rounded-2xl shadow-xl shadow-black/30">
+    <h2 class="text-2xl font-bold mb-2 text-white">Hackathon Wins</h2>
+    <div class="h-px bg-slate-700 mb-6"></div>
+
+    <div class="grid grid-cols-1 gap-4">
+      <div class="hack-card card-hover border border-slate-700 rounded-xl p-6 bg-slate-900/50 flex flex-col">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <span class="text-xs font-bold uppercase tracking-wide bg-slate-400/15 text-slate-200 border border-slate-400/30 px-2.5 py-1 rounded-full">🥈 2nd Place</span>
+          <span class="text-xs text-slate-500">Sep 2026 · Team Vitality</span>
+        </div>
+        <h3 class="font-semibold text-slate-100">AI Investment Spark Challenge</h3>
+        <p class="text-xs text-slate-500 mb-3">TIAA · ASU W. P. Carey School of Business · AWS</p>
+        <p class="text-lg font-semibold text-blue-300">FundSentinel</p>
+        <p class="text-sm text-slate-400 mb-4">
+          An AI approval committee for investment funds that routes itself and proves every decision.
+          A five-agent data team profiles, cleans and documents any fund file with no setup. A seven-agent
+          committee then reviews each fund: a Supervisor routes the work to four specialist reviewers,
+          an Evidence checker demands proof, and a Decision owner rules. AI makes the judgements, while code
+          does the maths, enforces hard rules and verifies every claim against the source data.
+        </p>
+
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Multi-Agent Systems</span>
+          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Claude on Bedrock</span>
+          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Bedrock AgentCore</span>
+          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Strands Agents</span>
+          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Amplify</span>
+          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">S3</span>
+          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Aurora</span>
+          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">CloudFormation</span>
+        </div>
+
+        <div class="mt-auto flex gap-4 text-sm">
+          <a href="https://asuevents.asu.edu/event/ai-investment-spark-challenge" target="_blank" rel="noopener" class="text-slate-400 hover:text-amber-300 transition">Event ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 <!-- AWARDS -->
 <section id="awards" class="mb-16 scroll-mt-24">
   <div class="reveal bg-slate-800/60 backdrop-blur border border-slate-700/60 p-8 rounded-2xl shadow-xl shadow-black/30">
@@ -521,7 +665,7 @@
         <div>
           <h3 class="font-semibold text-slate-100">
             Herbold Graduate Engineering Scholarship
-            <span class="ml-2 text-xs bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full">Aug 2025</span>
+            <span class="ml-2 text-xs bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full">Sep 2025</span>
           </h3>
           <p class="text-sm text-slate-400">
             Awarded to high-achieving graduate students (GPA ≥ 3.5) with research interests in computer science and engineering.
@@ -630,6 +774,15 @@ const statObserver = new IntersectionObserver(
   { threshold: 0.5 }
 );
 statEls.forEach(el => statObserver.observe(el));
+
+// News "Show more" toggle
+const newsList = document.getElementById("news-list");
+const newsToggle = document.getElementById("news-toggle");
+if (!newsList.querySelector(".news-extra")) newsToggle.hidden = true;
+newsToggle.addEventListener("click", () => {
+  const expanded = newsList.classList.toggle("news-expanded");
+  newsToggle.textContent = expanded ? "Show less ↑" : "Show more ↓";
+});
 </script>
 
 </body>
