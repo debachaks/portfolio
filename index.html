@@ -5,7 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Debaleena Chakraborty | Portfolio</title>
 
+  <!-- Theme: light by default; "dark" class on <html> switches to dark. Applied before paint to avoid a flash. -->
+  <script>
+    try {
+      if (localStorage.getItem("theme") === "dark") document.documentElement.classList.add("dark");
+    } catch (e) {}
+  </script>
+
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind colour names point at CSS variables, so each theme only swaps the variable values below.
+    const themed = (name, shades) =>
+      Object.fromEntries(shades.map(s => [s, `rgb(var(--${name}-${s}) / <alpha-value>)`]));
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            slate: themed("slate", [100, 200, 300, 400, 500, 600, 700, 800, 900, 950]),
+            blue: themed("blue", [100, 300, 400, 500, 700]),
+            emerald: themed("emerald", [300, 400, 500]),
+            amber: themed("amber", [300, 400, 500]),
+            white: "rgb(var(--white) / <alpha-value>)",
+            black: "rgb(var(--black) / <alpha-value>)",
+          },
+        },
+      },
+    };
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,16 +42,87 @@
   />
 
   <style>
+    /* Light theme (default): warm linen neutrals, sage accent, ochre for hackathons.
+       Neutral shades are inverted so each class keeps its role (950 = page, 100 = headings). */
+    :root {
+      --slate-950: 244 241 234;
+      --slate-900: 237 232 222;
+      --slate-800: 251 249 244;
+      --slate-700: 221 214 200;
+      --slate-600: 184 175 159;
+      --slate-500: 125 117 104;
+      --slate-400: 95 88 77;
+      --slate-300: 74 68 59;
+      --slate-200: 58 53 46;
+      --slate-100: 43 39 34;
+      --white: 35 32 27;
+      --black: 120 105 80;
+
+      --blue-100: 238 243 236;
+      --blue-300: 70 98 78;
+      --blue-400: 84 115 92;
+      --blue-500: 122 152 128;
+      --blue-700: 84 112 90;
+
+      --emerald-300: 52 108 82;
+      --emerald-400: 92 156 118;
+      --emerald-500: 92 156 118;
+
+      --amber-300: 146 96 40;
+      --amber-400: 200 145 75;
+      --amber-500: 190 136 68;
+
+      color-scheme: light;
+    }
+
+    /* Dark theme: Tailwind's default slate/blue palette */
+    html.dark {
+      --slate-950: 2 6 23;
+      --slate-900: 15 23 42;
+      --slate-800: 30 41 59;
+      --slate-700: 51 65 85;
+      --slate-600: 71 85 105;
+      --slate-500: 100 116 139;
+      --slate-400: 148 163 184;
+      --slate-300: 203 213 225;
+      --slate-200: 226 232 240;
+      --slate-100: 241 245 249;
+      --white: 255 255 255;
+      --black: 0 0 0;
+
+      --blue-100: 219 234 254;
+      --blue-300: 147 197 253;
+      --blue-400: 96 165 250;
+      --blue-500: 59 130 246;
+      --blue-700: 29 78 216;
+
+      --emerald-300: 110 231 183;
+      --emerald-400: 52 211 153;
+      --emerald-500: 16 185 129;
+
+      --amber-300: 252 211 77;
+      --amber-400: 251 191 36;
+      --amber-500: 245 158 11;
+
+      color-scheme: dark;
+    }
+
     body {
       font-family: "Inter", sans-serif;
+      background-color: rgb(var(--slate-950));
     }
+
+    /* Text and chips on the filled accent card stay light in both themes */
+    .on-accent { color: #fff; }
+    .chip-on-accent { background-color: rgba(255,255,255,0.2); }
+
     .active-link {
-      color: #60a5fa;
+      color: rgb(var(--blue-400));
       transform: scale(1.08) translateX(4px);
     }
     .active-link .nav-dot {
-      background-color: #60a5fa;
-      box-shadow: 0 0 0 4px rgba(96,165,250,0.25);
+      background-color: rgb(var(--blue-400));
+      box-shadow: 0 0 0 4px rgb(var(--blue-400) / 0.25);
     }
     .nav-link {
       transition: color 0.2s ease, transform 0.2s ease;
@@ -48,7 +146,7 @@
     .timeline {
       position: relative;
       margin-left: 0.65rem;
-      border-left: 2px solid #334155;
+      border-left: 2px solid rgb(var(--slate-700));
     }
     .timeline-item {
       position: relative;
@@ -65,9 +163,9 @@
       width: 16px;
       height: 16px;
       border-radius: 9999px;
-      background: #3b82f6;
-      border: 3px solid #0f172a;
-      box-shadow: 0 0 0 3px #334155;
+      background: rgb(var(--blue-500));
+      border: 3px solid rgb(var(--slate-800));
+      box-shadow: 0 0 0 3px rgb(var(--slate-700));
     }
 
     .card-hover {
@@ -75,7 +173,7 @@
     }
     .card-hover:hover {
       transform: translateY(-3px);
-      box-shadow: 0 12px 28px -8px rgba(59,130,246,0.35);
+      box-shadow: 0 12px 28px -8px rgb(var(--blue-500) / 0.35);
     }
 
     .stat-number {
@@ -87,7 +185,7 @@
       transition: background-color 0.2s ease;
     }
     .news-item:hover {
-      background-color: rgba(59,130,246,0.06);
+      background-color: rgb(var(--blue-500) / 0.06);
     }
     .news-extra {
       display: none;
@@ -100,14 +198,14 @@
       width: 8px;
       height: 8px;
       border-radius: 9999px;
-      background: #34d399;
+      background: rgb(var(--emerald-400));
     }
     .pulse-dot::after {
       content: "";
       position: absolute;
       inset: 0;
       border-radius: 9999px;
-      background: #34d399;
+      background: rgb(var(--emerald-400));
       animation: pulse-ring 1.8s ease-out infinite;
     }
     @keyframes pulse-ring {
@@ -125,10 +223,10 @@
       position: absolute;
       inset: 0 0 auto 0;
       height: 3px;
-      background: linear-gradient(90deg, #f59e0b, #fbbf24, #f59e0b);
+      background: linear-gradient(90deg, rgb(var(--amber-500)), rgb(var(--amber-400)), rgb(var(--amber-500)));
     }
     .hack-card:hover {
-      box-shadow: 0 12px 28px -8px rgba(245,158,11,0.35);
+      box-shadow: 0 12px 28px -8px rgb(var(--amber-500) / 0.35);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -138,6 +236,21 @@
 </head>
 
 <body class="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-300">
+
+<!-- THEME TOGGLE -->
+<button id="theme-toggle" type="button" aria-label="Switch to dark mode"
+        class="fixed top-4 right-4 z-50 flex items-center gap-2 px-3 py-2 rounded-full bg-slate-800/90 backdrop-blur border border-slate-700 text-slate-300 hover:text-blue-400 shadow-lg shadow-black/10 transition">
+  <!-- Moon: shown in light mode -->
+  <svg class="h-5 w-5 dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+  </svg>
+  <!-- Sun: shown in dark mode -->
+  <svg class="h-5 w-5 hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+  </svg>
+  <span class="text-sm font-medium dark:hidden">Dark</span>
+  <span class="text-sm font-medium hidden dark:inline">Light</span>
+</button>
 
 <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 <div class="md:flex">
@@ -519,15 +632,15 @@
     <div class="h-px bg-slate-700 mb-6"></div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 md:grid-rows-2 gap-4">
-      <div class="card-hover col-span-2 row-span-2 bg-gradient-to-br from-blue-700 to-blue-500 text-white rounded-2xl p-6 flex flex-col justify-between">
+      <div class="card-hover col-span-2 row-span-2 bg-gradient-to-br from-blue-700 to-blue-500 on-accent rounded-2xl p-6 flex flex-col justify-between">
         <div>
           <h4 class="text-lg font-semibold mb-1">Machine Learning &amp; Deep Learning</h4>
-          <p class="text-sm text-blue-100">Core modeling &amp; experimentation stack</p>
+          <p class="text-sm on-accent opacity-80">Core modeling &amp; experimentation stack</p>
         </div>
         <div class="flex flex-wrap gap-2 mt-4">
-          <span class="bg-white/20 px-3 py-1 rounded-full text-sm">TensorFlow</span>
-          <span class="bg-white/20 px-3 py-1 rounded-full text-sm">PyTorch</span>
-          <span class="bg-white/20 px-3 py-1 rounded-full text-sm">MLflow</span>
+          <span class="chip-on-accent px-3 py-1 rounded-full text-sm">TensorFlow</span>
+          <span class="chip-on-accent px-3 py-1 rounded-full text-sm">PyTorch</span>
+          <span class="chip-on-accent px-3 py-1 rounded-full text-sm">MLflow</span>
         </div>
       </div>
 
@@ -774,6 +887,19 @@ const statObserver = new IntersectionObserver(
   { threshold: 0.5 }
 );
 statEls.forEach(el => statObserver.observe(el));
+
+// Light/dark toggle (light is the default; the choice is remembered)
+const themeToggle = document.getElementById("theme-toggle");
+function syncThemeLabel() {
+  const dark = document.documentElement.classList.contains("dark");
+  themeToggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+}
+syncThemeLabel();
+themeToggle.addEventListener("click", () => {
+  const dark = document.documentElement.classList.toggle("dark");
+  try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+  syncThemeLabel();
+});
 
 // News "Show more" toggle
 const newsList = document.getElementById("news-list");
