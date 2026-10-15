@@ -213,6 +213,28 @@
       100% { transform: scale(2.8); opacity: 0; }
     }
 
+    /* Publication tabs */
+    .pub-tab {
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: rgb(var(--slate-400));
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    .pub-tab:hover {
+      color: rgb(var(--blue-400));
+    }
+    .pub-tab[aria-selected="true"] {
+      background-color: rgb(var(--blue-500) / 0.2);
+      color: rgb(var(--blue-300));
+    }
+    .pub-count {
+      margin-left: 0.25rem;
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+
     /* Hackathons */
     .hack-card {
       position: relative;
@@ -423,16 +445,21 @@
       I'm a PhD student in Computer Engineering at Arizona State University, advised by
       <a href="https://sites.google.com/view/eirini-eleni-tsiropoulou/home?authuser=0" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300">Dr. Eirini Eleni Tsiropoulou</a>
       in the <span class="text-blue-400 font-semibold">PROTON Lab</span>.
-      My research focuses on machine learning for detecting and diagnosing faults and attacks in
-      microprocessors, with secondary work on resource optimization in wireless networks.
+      My PhD research, in collaboration with
+      <a href="https://www.sandia.gov" target="_blank" rel="noopener" class="text-blue-400 font-semibold hover:text-blue-300">Sandia National Laboratories</a>,
+      focuses on hardware security, fault analysis and survivable electronics.
+      I also contribute to
+      <a href="https://sites.google.com/view/factory-ai/home" target="_blank" rel="noopener" class="text-blue-400 font-semibold hover:text-blue-300">FACTORY-AI</a>,
+      an NSF-funded project on AI-native industrial IoT networks for smart manufacturing.
     </p>
 
     <!-- Interests -->
     <div class="flex flex-wrap gap-3 mb-8">
+      <span class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-medium">Hardware Security</span>
+      <span class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-medium">Fault Analysis</span>
+      <span class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-medium">Survivable Electronics</span>
       <span class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-medium">Machine Learning</span>
-      <span class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-medium">Hardware Fault Detection</span>
-      <span class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-medium">Resilient Computing</span>
-      <span class="px-4 py-1.5 rounded-full bg-slate-700/40 border border-slate-600/50 text-slate-400 text-sm font-medium">Network Optimization</span>
+      <span class="px-4 py-1.5 rounded-full bg-slate-700/40 border border-slate-600/50 text-slate-400 text-sm font-medium">Industrial IoT Networks</span>
     </div>
 
     <!-- Stats -->
@@ -511,6 +538,7 @@
         <ul class="list-disc ml-5 mt-2 text-sm text-slate-400 space-y-1">
           <li>Studying fault detection and diagnosis in microprocessors by analyzing hardware performance counters and register-level telemetry, applying statistical and machine learning techniques to identify and characterize fault-induced attacks.</li>
           <li>Developed a zero-label anomaly detection and forensic attribution framework using contrastive learning to identify fault-injected and adversarial behavior in RISC-V embedded processors.</li>
+          <li>Designed a windowed-difference, multi-detector consensus methodology for false-alarm suppression in noisy time-series hardware telemetry, generalizable to anomaly detection problems beyond hardware security.</li>
         </ul>
         <p class="text-sm font-semibold text-slate-300 mt-3">MS</p>
         <ul class="list-disc ml-5 mt-2 text-sm text-slate-400 space-y-1">
@@ -550,11 +578,56 @@
     <h2 class="text-2xl font-bold mb-2 text-white">Publications</h2>
     <div class="h-px bg-slate-700 mb-6"></div>
 
-    <div class="space-y-4">
-      <div class="card-hover border-l-4 border-blue-500 border-t border-r border-b border-slate-700 rounded-xl p-5 bg-slate-900/50">
+    <!-- Tabs: counts are filled in by the script below -->
+    <div role="tablist" aria-label="Publications" class="inline-flex gap-1 p-1 mb-6 rounded-full bg-slate-900/60 border border-slate-700">
+      <button type="button" role="tab" class="pub-tab" data-panel="pubs-published" aria-selected="true">
+        Published <span class="pub-count"></span>
+      </button>
+      <button type="button" role="tab" class="pub-tab" data-panel="pubs-review" aria-selected="false">
+        Under Review <span class="pub-count"></span>
+      </button>
+    </div>
+
+    <div id="pubs-review" role="tabpanel" class="space-y-4" hidden>
+      <div class="card-hover border-l-4 border-dashed border-slate-500 border-t border-r border-b border-slate-700 rounded-xl p-5 bg-slate-900/50">
+        <h3 class="font-semibold text-slate-100">
+          Reliable Anomaly Detection for GPS-Dependent Networked Systems via Unsupervised Fusion of Hardware Performance Counters
+          <span class="ml-2 text-xs bg-amber-500/15 text-amber-300 px-2 py-0.5 rounded-full whitespace-nowrap">Under review</span>
+        </h3>
+        <p class="text-sm text-slate-400 mt-1">
+          <strong class="text-slate-200">D. Chakraborty</strong>, A. Hati, J. Plusquellic, K. Chakrabarty, T. J. Mannos, E. E. Tsiropoulou
+        </p>
+        <p class="text-sm italic text-slate-500">Submitted to IEEE ICC 2027</p>
+      </div>
+
+      <div class="card-hover border-l-4 border-dashed border-slate-500 border-t border-r border-b border-slate-700 rounded-xl p-5 bg-slate-900/50">
+        <h3 class="font-semibold text-slate-100">
+          Semantic-Aware WiFi Data Collection for Smart Manufacturing with AI-Driven Edge Intelligence
+          <span class="ml-2 text-xs bg-amber-500/15 text-amber-300 px-2 py-0.5 rounded-full whitespace-nowrap">Under review</span>
+        </h3>
+        <p class="text-sm text-slate-400 mt-1">
+          S. H. Nimmagadda, <strong class="text-slate-200">D. Chakraborty</strong>, P. Sharma, K. Chakrabarty, E. E. Tsiropoulou
+        </p>
+        <p class="text-sm italic text-slate-500">Submitted to IEEE ICC 2027</p>
+      </div>
+
+      <div class="card-hover border-l-4 border-dashed border-slate-500 border-t border-r border-b border-slate-700 rounded-xl p-5 bg-slate-900/50">
+        <h3 class="font-semibold text-slate-100">
+          A Game-Theoretic Approach to Distributed Power Control in Over-the-Air Computation Wireless Systems
+          <span class="ml-2 text-xs bg-amber-500/15 text-amber-300 px-2 py-0.5 rounded-full whitespace-nowrap">Under review</span>
+        </h3>
+        <p class="text-sm text-slate-400 mt-1">
+          <strong class="text-slate-200">D. Chakraborty</strong>, A. Sabyrbek, E. E. Tsiropoulou
+        </p>
+        <p class="text-sm italic text-slate-500">Submitted to IEEE Transactions on Green Communications and Networking</p>
+      </div>
+    </div>
+
+    <div id="pubs-published" role="tabpanel" class="space-y-4">
+      <div class="card-hover border-l-4 border-l-blue-400 border-t border-r border-b border-blue-500/40 rounded-xl p-5 bg-blue-500/20">
         <h3 class="font-semibold text-slate-100">
           Zero-Label Anomaly Detection and Forensic Attribution for RISC-V Embedded Devices via Contrastive Learning
-          <span class="ml-2 text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">2026</span>
+          <span class="ml-2 text-xs bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">2026</span>
         </h3>
         <p class="text-sm text-slate-400 mt-1">
           <strong class="text-slate-200">D. Chakraborty</strong>, A. Hati, J. Plusquellic, K. Chakrabarty, T. J. Mannos, E. E. Tsiropoulou
@@ -564,10 +637,10 @@
         </p>
       </div>
 
-      <div class="card-hover border-l-4 border-blue-500 border-t border-r border-b border-slate-700 rounded-xl p-5 bg-slate-900/50">
+      <div class="card-hover border-l-4 border-l-blue-400 border-t border-r border-b border-blue-500/40 rounded-xl p-5 bg-blue-500/20">
         <h3 class="font-semibold text-slate-100">
           Game-Theoretic Over-the-Air Computation for Socially Coupled Crowdsensing Systems
-          <span class="ml-2 text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">2026</span>
+          <span class="ml-2 text-xs bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">2026</span>
         </h3>
         <p class="text-sm text-slate-400 mt-1">
           A. Sabyrbek, <strong class="text-slate-200">D. Chakraborty</strong>, E. E. Tsiropoulou
@@ -577,10 +650,10 @@
         </p>
       </div>
 
-      <div class="card-hover border-l-4 border-blue-500 border-t border-r border-b border-slate-700 rounded-xl p-5 bg-slate-900/50">
+      <div class="card-hover border-l-4 border-l-blue-400 border-t border-r border-b border-blue-500/40 rounded-xl p-5 bg-blue-500/20">
         <h3 class="font-semibold text-slate-100">
           Attention-based Deep Learning for Epileptic Seizure Type Detection
-          <span class="ml-2 text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">2024</span>
+          <span class="ml-2 text-xs bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">2024</span>
         </h3>
         <p class="text-sm text-slate-400 mt-1">
           A. Shankar, <strong class="text-slate-200">D. Chakraborty</strong>, et al.
@@ -588,10 +661,10 @@
         <p class="text-sm italic text-slate-500">ASSIC</p>
       </div>
 
-      <div class="card-hover border-l-4 border-blue-500 border-t border-r border-b border-slate-700 rounded-xl p-5 bg-slate-900/50">
+      <div class="card-hover border-l-4 border-l-blue-400 border-t border-r border-b border-blue-500/40 rounded-xl p-5 bg-blue-500/20">
         <h3 class="font-semibold text-slate-100">
           Seizure Type Detection Using EEG Signals Based on Phase Synchronization and Deep Learning
-          <span class="ml-2 text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">2023</span>
+          <span class="ml-2 text-xs bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">2023</span>
         </h3>
         <p class="text-sm text-slate-400 mt-1">
           A. Shankar, <strong class="text-slate-200">D. Chakraborty</strong>, et al.
@@ -599,10 +672,10 @@
         <p class="text-sm italic text-slate-500">IEEE BSN</p>
       </div>
 
-      <div class="card-hover border-l-4 border-blue-500 border-t border-r border-b border-slate-700 rounded-xl p-5 bg-slate-900/50">
+      <div class="card-hover border-l-4 border-l-blue-400 border-t border-r border-b border-blue-500/40 rounded-xl p-5 bg-blue-500/20">
         <h3 class="font-semibold text-slate-100">
           Long Short-Term Memory Framework for Seizure Type Classification Using EEG Signals
-          <span class="ml-2 text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">2023</span>
+          <span class="ml-2 text-xs bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">2023</span>
         </h3>
         <p class="text-sm text-slate-400 mt-1">
           A. Shankar, <strong class="text-slate-200">D. Chakraborty</strong>, et al.
@@ -610,10 +683,10 @@
         <p class="text-sm italic text-slate-500">IEEE SPMB</p>
       </div>
 
-      <div class="card-hover border-l-4 border-blue-500 border-t border-r border-b border-slate-700 rounded-xl p-5 bg-slate-900/50">
+      <div class="card-hover border-l-4 border-l-blue-400 border-t border-r border-b border-blue-500/40 rounded-xl p-5 bg-blue-500/20">
         <h3 class="font-semibold text-slate-100">
           Efficient Hardware Implementation of Cube Architecture using Yavadunam Sutra on FPGA
-          <span class="ml-2 text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">2021</span>
+          <span class="ml-2 text-xs bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">2021</span>
         </h3>
         <p class="text-sm text-slate-400 mt-1">
           M. Thakare, P. Yash, <strong class="text-slate-200">D. Chakraborty</strong>, B. Jajodia
@@ -899,6 +972,20 @@ themeToggle.addEventListener("click", () => {
   const dark = document.documentElement.classList.toggle("dark");
   try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
   syncThemeLabel();
+});
+
+// Publication tabs: show one panel at a time and label each tab with its paper count
+const pubTabs = document.querySelectorAll(".pub-tab");
+pubTabs.forEach(tab => {
+  const panel = document.getElementById(tab.dataset.panel);
+  tab.querySelector(".pub-count").textContent = `(${panel.children.length})`;
+  tab.addEventListener("click", () => {
+    pubTabs.forEach(t => {
+      const selected = t === tab;
+      t.setAttribute("aria-selected", selected);
+      document.getElementById(t.dataset.panel).hidden = !selected;
+    });
+  });
 });
 
 // News "Show more" toggle
