@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+<script src="dp-data.js"></script>
+<script src="dp-viz.js"></script>
+<style>
+body{margin:0;background:oklch(0.95 0.025 80);color:oklch(0.24 0.03 50);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{color:oklch(0.52 0.14 45)}
+*{box-sizing:border-box}
+button{font-family:inherit}
+@keyframes popIn{from{opacity:0;transform:scale(.3) rotate(-20deg)}to{opacity:1;transform:none}}
+@keyframes dropIn{from{opacity:0;transform:translateY(-120px)}70%{transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes swing{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes flicker{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.3)}}
+@keyframes glowPulse{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes steamBig{0%{transform:translateY(0);opacity:0}30%{opacity:1}100%{transform:translateY(-120px);opacity:0}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes ring{0%{transform:scale(.5);opacity:1}100%{transform:scale(2.4);opacity:0}}
+@keyframes draw{0%{stroke-dashoffset:400}60%,100%{stroke-dashoffset:0}}
+@keyframes bar{0%,10%{transform:scaleY(var(--a))}35%{transform:scaleY(var(--b))}60%,85%{transform:scaleY(.5)}100%{transform:scaleY(var(--a))}}
+@keyframes sweep{from{transform:translateX(0)}to{transform:translateX(156px)}}
+@keyframes phase{0%,100%{transform:translateX(0)}50%{transform:translateX(20px)}}
+@keyframes reorder{0%,20%{transform:translateY(0)}40%,80%{transform:translateY(var(--dy))}100%{transform:translateY(0)}}
+@keyframes scrollW{to{transform:translateX(var(--w))}}
+@keyframes wobble{0%,100%{transform:rotate(0)}25%{transform:rotate(-14deg)}75%{transform:rotate(14deg)}}
+</style>
+</helmet>
+
+<div style="position:fixed;left:24px;top:20px;z-index:30;display:flex;align-items:center;gap:10px;padding:6px 16px 6px 6px;border-radius:999px;background:oklch(0.99 0.008 85 / 0.92);backdrop-filter:blur(10px);box-shadow:0 10px 30px -14px oklch(0.24 0.03 50 / 0.4)">
+  <a href="Debaleena Portfolio.dc.html" onClick="{{ goHome }}" title="Exit kitchen" style="width:36px;height:36px;border-radius:50%;background:oklch(0.24 0.03 50);color:oklch(0.96 0.02 80);display:flex;align-items:center;justify-content:center;text-decoration:none;font-family:'Material Symbols Rounded';font-size:19px">arrow_back</a>
+  <span style="font-family:'Instrument Serif',serif;font-size:22px;font-style:italic">Debaleena’s Kitchen</span>
+  <span style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:oklch(0.93 0.04 70);font-family:'JetBrains Mono',monospace;font-size:11px"><span style="font-family:'Material Symbols Rounded';font-size:16px">{{ recipeIcon }}</span>{{ recipeName }}</span>
+</div>
+<div style="position:fixed;right:24px;top:20px;z-index:30;display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;background:oklch(0.24 0.03 50);color:oklch(0.96 0.02 80);font-family:'JetBrains Mono',monospace;font-size:12px;box-shadow:0 10px 30px -14px oklch(0.24 0.03 50 / 0.5)">
+  <span style="font-family:'Material Symbols Rounded';font-size:18px;color:oklch(0.82 0.14 85)">star</span>{{ stars }}
+</div>
+<sc-if value="{{ menuOpen }}">
+  <div onClick="{{ toggleMenu }}" style="position:fixed;inset:0;z-index:31;background:oklch(0.24 0.03 50 / 0.35);backdrop-filter:blur(3px);animation:fadeUp .2s both"></div>
+</sc-if>
+<div style="position:fixed;right:28px;bottom:28px;z-index:32;width:112px;height:112px">
+  <sc-if value="{{ menuOpen }}">
+    <sc-for list="{{ dialItems }}" as="t" hint-placeholder-count="8">
+      <button onClick="{{ t.go }}" style="position:absolute;right:{{ t.r }};bottom:{{ t.b }};display:flex;align-items:center;gap:8px;white-space:nowrap;padding:9px 14px 9px 9px;border-radius:999px;border:0;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};font-size:14px;box-shadow:0 10px 20px -10px oklch(0.24 0.03 50 / 0.5);animation:popIn .35s cubic-bezier(.3,1.5,.4,1) both;animation-delay:{{ t.delay }}">
+        <span style="width:26px;height:26px;border-radius:50%;background:oklch(0.93 0.04 70);color:oklch(0.45 0.13 45);display:flex;align-items:center;justify-content:center;font-family:'Material Symbols Rounded';font-size:16px">{{ t.icon }}</span>{{ t.label }}<sc-if value="{{ t.done }}"><span style="font-family:'Material Symbols Rounded';font-size:16px;color:oklch(0.6 0.14 150)">check_circle</span></sc-if>
+      </button>
+    </sc-for>
+  </sc-if>
+  <button onClick="{{ prev }}" title="Previous step" style="position:absolute;right:124px;bottom:30px;width:52px;height:52px;border-radius:50%;border:0;cursor:pointer;background:oklch(0.99 0.008 85);color:oklch(0.24 0.03 50);box-shadow:0 10px 24px -12px oklch(0.24 0.03 50 / 0.5);font-family:'Material Symbols Rounded';font-size:24px">undo</button>
+  <button onClick="{{ toggleMenu }}" title="Oven dial · all steps" style="position:absolute;inset:0;border-radius:50%;border:0;cursor:pointer;padding:6px;background:conic-gradient(oklch(0.62 0.16 50) {{ progressDeg }},oklch(0.24 0.03 50 / 0.15) 0);box-shadow:0 20px 40px -16px oklch(0.24 0.03 50 / 0.6)">
+    <span style="width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 30%,oklch(0.4 0.02 50),oklch(0.22 0.02 50) 70%);color:oklch(0.96 0.02 80);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px">
+      <span style="font-family:'Material Symbols Rounded';font-size:28px;color:oklch(0.8 0.13 70)">{{ curIcon }}</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em">{{ progressTxt }}</span>
+    </span>
+  </button>
+  <button onClick="{{ next }}" title="Next step" style="position:absolute;right:30px;bottom:124px;width:52px;height:52px;border-radius:50%;border:0;cursor:pointer;background:oklch(0.6 0.15 50);color:oklch(0.99 0.01 80);box-shadow:0 10px 24px -12px oklch(0.24 0.03 50 / 0.5);font-family:'Material Symbols Rounded';font-size:24px">redo</button>
+</div>
+<div style="position:fixed;left:24px;bottom:28px;z-index:30;display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:999px;background:oklch(0.99 0.008 85 / 0.92);backdrop-filter:blur(10px);font-family:'JetBrains Mono',monospace;font-size:12px;box-shadow:0 10px 30px -14px oklch(0.24 0.03 50 / 0.4)">
+  <span style="font-family:'Material Symbols Rounded';font-size:18px;color:oklch(0.52 0.14 45)">{{ curIcon }}</span>Step {{ progressTxt }} · {{ curLabel }}
+</div>
+
+<sc-if value="{{ s0 }}" hint-placeholder-val="{{ true }}">
+  <section data-screen-label="01 Order" style="min-height:100vh;padding:92px 44px 120px;display:flex;flex-direction:column;background:oklch(0.95 0.025 80);background-image:linear-gradient(90deg,oklch(0.24 0.03 50 / 0.04) 1px,transparent 1px),linear-gradient(oklch(0.24 0.03 50 / 0.04) 1px,transparent 1px);background-size:56px 56px">
+    <div style="width:100%;max-width:1640px;margin:0 auto;flex:1;display:flex;flex-direction:column;justify-content:center;gap:36px">
+      <div style="display:flex;flex-direction:column;gap:16px;animation:fadeUp .7s both">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:oklch(0.52 0.14 45)">Today’s order · One PhD researcher</span>
+        <h1 style="margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(46px,6.5vw,96px);line-height:.95;max-width:16ch">What are we <em style="color:oklch(0.52 0.14 45)">baking</em> Debaleena into?</h1>
+        <p style="margin:0;max-width:52ch;font-size:18px;line-height:1.55">Pick a signature bake. You’ll stock the bowl with her skills, layer her degrees, bake each job in the oven, taste her projects and take it to the bake-off. Every finished step earns stars.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:20px">
+        <sc-for list="{{ recipes }}" as="r" hint-placeholder-count="2">
+          <button onClick="{{ r.pick }}" style="text-align:left;cursor:pointer;border:3px solid {{ r.border }};border-radius:24px;background:oklch(0.99 0.008 85);padding:0;overflow:hidden;display:flex;flex-direction:column;color:inherit;box-shadow:{{ r.shadow }};transform:{{ r.tf }};transition:all .45s cubic-bezier(.3,1.4,.4,1)" style-hover="transform:translateY(-6px) rotate(-1deg)">
+            <div style="position:relative;height:clamp(220px,30vh,380px);background:{{ r.stripes }};display:flex;align-items:center;justify-content:center">
+              <span style="font-family:'Material Symbols Rounded';font-size:clamp(110px,14vh,170px);color:{{ r.ink }};animation:wobble 3s ease-in-out infinite">{{ r.icon }}</span>
+              <span style="position:absolute;left:14px;bottom:12px;font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 9px;border-radius:999px;background:oklch(0.24 0.03 50 / 0.75);color:oklch(0.97 0.01 80)">{{ r.photo }}</span>
+              <sc-if value="{{ r.on }}"><span style="position:absolute;right:14px;top:14px;display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 12px;border-radius:999px;background:{{ r.ink }};color:oklch(0.98 0.01 80);animation:popIn .4s both"><span style="font-family:'Material Symbols Rounded';font-size:16px">check</span>Chosen</span></sc-if>
+            </div>
+            <div style="padding:22px 24px 26px;display:flex;flex-direction:column;gap:8px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:{{ r.ink }}">{{ r.kicker }}</span>
+              <span style="font-family:'Instrument Serif',serif;font-size:44px;line-height:1">{{ r.name }}</span>
+              <span style="font-size:15px;line-height:1.5;opacity:.75">{{ r.blurb }}</span>
+            </div>
+          </button>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+        <button onClick="{{ next }}" style="display:flex;align-items:center;gap:8px;border:0;cursor:pointer;padding:16px 28px;border-radius:999px;background:oklch(0.55 0.14 50);color:oklch(0.98 0.01 80);font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.06em;text-transform:uppercase" style-hover="transform:scale(1.04)">Start baking {{ recipeName }}<span style="font-family:'Material Symbols Rounded';font-size:20px">arrow_forward</span></button>
+        <a href="Debaleena Portfolio.dc.html" onClick="{{ goHome }}" style="font-family:'JetBrains Mono',monospace;font-size:12px;padding:12px">or go back home</a>
+      </div>
+      <div style="display:flex;flex-direction:column">
+        <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:8px">
+          <span style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase"><span style="font-family:'Material Symbols Rounded';font-size:20px;color:oklch(0.52 0.14 45)">receipt_long</span>Order rail · Latest news</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:.6">scroll the rail →</span>
+        </div>
+        <div style="height:12px;border-radius:6px;background:linear-gradient(oklch(0.84 0.01 80),oklch(0.62 0.01 80));box-shadow:0 4px 8px -4px oklch(0 0 0 / 0.4)"></div>
+        <div style="display:flex;gap:16px;overflow-x:auto;padding:0 8px 28px">
+          <sc-for list="{{ tickets }}" as="n" hint-placeholder-count="10">
+            <div style="flex:0 0 220px;transform-origin:50% 0;animation:{{ n.anim }}">
+              <div style="width:18px;height:14px;margin:0 auto;background:oklch(0.55 0.01 80);border-radius:0 0 4px 4px"></div>
+              <div style="background:oklch(0.99 0.008 85);padding:16px 16px 24px;box-shadow:0 12px 24px -14px oklch(0.24 0.03 50 / 0.45);display:flex;flex-direction:column;gap:10px;-webkit-mask:radial-gradient(circle 6px at 50% 100%,transparent 98%,#000) 0 0/16px 100% repeat-x;mask:radial-gradient(circle 6px at 50% 100%,transparent 98%,#000) 0 0/16px 100% repeat-x">
+                <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.6"><span>Ticket {{ n.no }}</span><span>{{ n.kind }}</span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px dashed oklch(0.24 0.03 50 / 0.25);padding-bottom:8px">
+                  <span style="font-family:'Instrument Serif',serif;font-size:34px;line-height:1">{{ n.d }}</span>
+                  <span style="font-family:'Material Symbols Rounded';font-size:26px;color:oklch(0.52 0.14 45)">{{ n.icon }}</span>
+                </div>
+                <p style="margin:0;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.55">{{ n.t }}</p>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+
+<sc-if value="{{ s1 }}">
+  <section data-screen-label="02 Pantry" style="min-height:100vh;padding:92px 44px 120px;display:flex;flex-direction:column;background:oklch(0.93 0.03 75)">
+    <div style="width:100%;max-width:1640px;margin:0 auto;flex:1;display:flex;flex-direction:column;gap:28px">
+      <div style="display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;animation:fadeUp .6s both">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:oklch(0.52 0.14 45)">Step 1 · The pantry · Skills</span>
+          <h2 style="margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(40px,5vw,64px);line-height:1">Tip the ingredients into the bowl</h2>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px">{{ addedTxt }}</span>
+          <button onClick="{{ addAll }}" style="border:1px solid oklch(0.24 0.03 50 / 0.3);background:transparent;cursor:pointer;padding:9px 14px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:12px;color:inherit">Add everything</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:48px;align-items:center;flex:1">
+        <div style="display:flex;flex-direction:column">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:22px 14px;padding:0 8px">
+            <sc-for list="{{ jars }}" as="j" hint-placeholder-count="13">
+              <button onClick="{{ j.add }}" title="{{ j.name }}" style="border:0;background:transparent;cursor:pointer;padding:0;display:flex;flex-direction:column;align-items:center;color:inherit;opacity:{{ j.op }};transform:{{ j.tf }};transition:all .4s cubic-bezier(.3,1.4,.4,1)" style-hover="transform:translateY(-6px) rotate(-4deg)">
+                <span style="width:62%;height:12px;border-radius:4px 4px 2px 2px;background:{{ j.lid }}"></span>
+                <span style="position:relative;width:86%;height:clamp(110px,15vh,170px);border-radius:10px 10px 18px 18px;background:oklch(0.98 0.01 80 / 0.5);border:2px solid oklch(0.24 0.03 50 / 0.15);overflow:hidden;display:flex;align-items:center;justify-content:center">
+                  <span style="position:absolute;left:0;right:0;bottom:0;height:{{ j.fill }};background:{{ j.glass }};transition:height .6s"></span>
+                  <span style="position:relative;background:oklch(0.99 0.008 85);padding:6px 4px;width:80%;border-radius:4px;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 4px oklch(0 0 0 / 0.08)">
+                    <span style="font-family:'Instrument Serif',serif;font-size:34px;line-height:1">{{ j.sym }}</span>
+                    <span style="font-size:11px;line-height:1.15;text-align:center">{{ j.name }}</span>
+                  </span>
+                </span>
+              </button>
+            </sc-for>
+          </div>
+          <div style="height:14px;margin-top:4px;border-radius:4px;background:oklch(0.5 0.08 55);box-shadow:0 8px 14px -8px oklch(0.24 0.03 50 / 0.6)"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:18px;position:sticky;top:90px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;padding:10px 16px;border-radius:999px;background:oklch(0.24 0.03 50);color:oklch(0.97 0.01 80);min-height:40px;display:flex;align-items:center;gap:8px"><span style="font-family:'Material Symbols Rounded';font-size:18px;color:oklch(0.82 0.14 85)">add_circle</span>{{ lastAdded }}</div>
+          <div ref="{{ bowlRef }}" style="position:relative;width:min(620px,100%,80vh);aspect-ratio:2/1.1">
+            <div style="position:absolute;inset:0;border-radius:0 0 200px 200px / 0 0 200px 200px;background:oklch(0.9 0.02 240);border:4px solid oklch(0.78 0.03 240);border-top-width:10px;overflow:hidden">
+              <div style="position:absolute;left:0;right:0;bottom:0;height:{{ bowlFill }};background:{{ batter }};transition:height .6s cubic-bezier(.3,1.4,.4,1)"></div>
+              <div style="position:absolute;left:8%;right:8%;bottom:10%;display:flex;flex-wrap:wrap-reverse;gap:4px;justify-content:center">
+                <sc-for list="{{ bowlChips }}" as="c" hint-placeholder-count="0"><span style="font-size:12px;padding:3px 9px;border-radius:999px;background:oklch(0.99 0.008 85 / 0.85);animation:popIn .4s both">{{ c.name }}</span></sc-for>
+              </div>
+            </div>
+          </div>
+          <div style="width:min(380px,60%);height:18px;border-radius:50%;background:oklch(0.24 0.03 50 / 0.15)"></div>
+          <sc-if value="{{ allIn }}">
+            <button onClick="{{ next }}" style="display:flex;align-items:center;gap:8px;border:0;cursor:pointer;padding:14px 24px;border-radius:999px;background:oklch(0.55 0.14 50);color:oklch(0.98 0.01 80);font-family:'JetBrains Mono',monospace;font-size:13px;animation:popIn .5s both">Bowl’s full · start mixing<span style="font-family:'Material Symbols Rounded';font-size:20px">arrow_forward</span></button>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ s2 }}">
+  <section data-screen-label="03 Mix" style="min-height:100vh;padding:92px 44px 120px;display:flex;flex-direction:column;background:oklch(0.95 0.025 80);background-image:repeating-linear-gradient(90deg,oklch(0.24 0.03 50 / 0.03) 0 48px,transparent 48px 96px)">
+    <div style="width:100%;max-width:1640px;margin:0 auto;flex:1;display:flex;flex-direction:column;gap:28px">
+      <div style="display:flex;flex-direction:column;gap:10px;animation:fadeUp .6s both">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:oklch(0.52 0.14 45)">Step 2 · Mix · Education</span>
+        <h2 style="margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(40px,5vw,64px);line-height:1">Whisk one layer per degree</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:56px;align-items:center;flex:1">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:28px">
+          <div style="position:relative;width:min(560px,100%,70vh);aspect-ratio:2/1.2;margin-top:12vh">
+            <span style="position:absolute;left:50%;top:-34%;margin-left:-70px;font-family:'Material Symbols Rounded';font-size:150px;color:oklch(0.55 0.02 240);transform-origin:50% 90%;animation:{{ whiskAnim }}">restaurant</span>
+            <div style="position:absolute;inset:0;border-radius:0 0 200px 200px / 0 0 200px 200px;background:oklch(0.9 0.02 240);border:4px solid oklch(0.78 0.03 240);border-top-width:10px;overflow:hidden">
+              <div style="position:absolute;left:0;right:0;bottom:0;height:70%;background:{{ batter }}"></div>
+            </div>
+          </div>
+          <button onClick="{{ whisk }}" style="display:flex;align-items:center;gap:8px;border:0;cursor:pointer;padding:16px 28px;border-radius:999px;background:oklch(0.55 0.14 50);color:oklch(0.98 0.01 80);font-family:'JetBrains Mono',monospace;font-size:13px" style-active="transform:scale(.95)"><span style="font-family:'Material Symbols Rounded';font-size:20px">blender</span>{{ whiskLabel }}</button>
+          <sc-if value="{{ layersDone }}">
+            <button onClick="{{ next }}" style="display:flex;align-items:center;gap:8px;border:1px solid oklch(0.24 0.03 50 / 0.3);cursor:pointer;padding:12px 20px;border-radius:999px;background:transparent;color:inherit;font-family:'JetBrains Mono',monospace;font-size:12px;animation:popIn .5s both">Into the oven<span style="font-family:'Material Symbols Rounded';font-size:18px">arrow_forward</span></button>
+          </sc-if>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0">
+          <div style="width:min(760px,100%);min-height:56vh;display:flex;flex-direction:column;justify-content:flex-end;gap:0">
+            <sc-if value="{{ isBerry }}"><sc-if value="{{ layersDone }}">
+              <div style="display:flex;justify-content:center;gap:10px;margin-bottom:-8px;position:relative;z-index:2;animation:dropIn .6s both">
+                <span style="width:26px;height:26px;border-radius:50%;background:oklch(0.5 0.18 15)"></span><span style="width:22px;height:22px;border-radius:50%;background:oklch(0.4 0.12 290)"></span><span style="width:26px;height:26px;border-radius:50%;background:oklch(0.5 0.18 15)"></span><span style="width:22px;height:22px;border-radius:50%;background:oklch(0.4 0.12 290)"></span><span style="width:26px;height:26px;border-radius:50%;background:oklch(0.5 0.18 15)"></span>
+              </div>
+            </sc-if></sc-if>
+            <sc-for list="{{ layers }}" as="l" hint-placeholder-count="0">
+              <div style="position:relative;padding:clamp(18px,3.4vh,36px) 30px;border-radius:16px;background:{{ l.color }};border-bottom:8px solid oklch(0.99 0.01 85);display:flex;justify-content:space-between;align-items:center;gap:14px;animation:dropIn .7s cubic-bezier(.3,1.3,.4,1) both;box-shadow:0 10px 20px -14px oklch(0.24 0.03 50 / 0.6)">
+                <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em">LAYER {{ l.roman }} · {{ l.when }}</span>
+                  <span style="font-family:'Instrument Serif',serif;font-size:clamp(26px,3.4vh,38px);line-height:1.1">{{ l.deg }}</span>
+                  <span style="font-size:14px;opacity:.8">{{ l.school }}</span>
+                </div>
+                <span style="flex:0 0 auto;font-family:'JetBrains Mono',monospace;font-size:12px;padding:5px 10px;border-radius:999px;background:oklch(0.99 0.008 85 / 0.7)">{{ l.gpa }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="width:min(840px,110%);height:20px;border-radius:50%;background:oklch(0.82 0.02 240);border:2px solid oklch(0.72 0.03 240)"></div>
+          <span style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:12px;opacity:.6">{{ layerCount }} / 3 layers · {{ recipeName }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ s3 }}">
+  <section data-screen-label="04 Oven" style="min-height:100vh;padding:92px 44px 120px;display:flex;flex-direction:column;background:oklch(0.9 0.03 60);background-image:linear-gradient(90deg,oklch(0.99 0.01 80 / 0.35) 2px,transparent 2px),linear-gradient(oklch(0.99 0.01 80 / 0.35) 2px,transparent 2px);background-size:64px 64px">
+    <div style="width:100%;max-width:1640px;margin:0 auto;flex:1;display:flex;flex-direction:column;gap:28px">
+      <div style="display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;animation:fadeUp .6s both">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:oklch(0.52 0.14 45)">Step 3 · The oven · Experience</span>
+          <h2 style="margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(40px,5vw,64px);line-height:1">Bake each rack, watch through the glass</h2>
+        </div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px">{{ bakedCount }} / 3 racks baked</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:36px;align-items:center;flex:1">
+        <div style="border-radius:22px;background:oklch(0.3 0.02 50);padding:18px;box-shadow:0 40px 70px -40px oklch(0.24 0.03 50 / 0.7)">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:4px 6px 16px;flex-wrap:wrap">
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <sc-for list="{{ racks }}" as="r" hint-placeholder-count="3">
+                <button onClick="{{ r.pick }}" style="display:flex;align-items:center;gap:6px;border:0;cursor:pointer;padding:8px 12px;border-radius:999px;background:{{ r.bg }};color:oklch(0.97 0.01 80);font-family:'JetBrains Mono',monospace;font-size:11px;transition:all .25s"><span style="font-family:'Material Symbols Rounded';font-size:17px">{{ r.icon }}</span>{{ r.ch }}<sc-if value="{{ r.baked }}"><span style="font-family:'Material Symbols Rounded';font-size:16px;color:oklch(0.82 0.14 85)">star</span></sc-if></button>
+              </sc-for>
+            </div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:18px;padding:6px 12px;border-radius:6px;background:oklch(0.15 0.02 50);color:oklch(0.8 0.18 45);letter-spacing:.08em">{{ ovenTime }}</span>
+          </div>
+          <div style="position:relative;border-radius:14px;border:10px solid oklch(0.22 0.02 50);background:oklch(0.16 0.03 50);aspect-ratio:600/220;overflow:hidden;box-shadow:{{ ovenGlow }};transition:box-shadow .6s">
+            {{ scope }}
+            <span style="position:absolute;left:12px;top:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:oklch(0.85 0.1 60)">{{ ce.screen }}</span>
+          </div>
+          <div style="height:12px;margin:16px 18% 4px;border-radius:6px;background:linear-gradient(oklch(0.8 0.01 80),oklch(0.55 0.01 80))"></div>
+          <div style="display:flex;gap:10px;justify-content:center;padding-top:14px;flex-wrap:wrap">
+            <button onClick="{{ bake }}" style="display:flex;align-items:center;gap:8px;border:0;cursor:pointer;padding:14px 24px;border-radius:999px;background:oklch(0.6 0.17 45);color:oklch(0.99 0.01 80);font-family:'JetBrains Mono',monospace;font-size:13px" style-active="transform:scale(.95)"><span style="font-family:'Material Symbols Rounded';font-size:20px">local_fire_department</span>{{ bakeLabel }}</button>
+            <sc-if value="{{ isProton }}">
+              <button onClick="{{ injectFault }}" style="display:flex;align-items:center;gap:8px;border:1px solid oklch(0.97 0.01 80 / 0.3);cursor:pointer;padding:14px 20px;border-radius:999px;background:transparent;color:oklch(0.97 0.01 80);font-family:'JetBrains Mono',monospace;font-size:12px"><span style="font-family:'Material Symbols Rounded';font-size:18px">bolt</span>Inject a fault</button>
+            </sc-if>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px;padding:22px 24px;border-radius:16px;background:oklch(0.99 0.008 85);box-shadow:0 20px 40px -30px oklch(0.24 0.03 50 / 0.6)">
+          <span style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:oklch(0.52 0.14 45)"><span style="font-family:'Material Symbols Rounded';font-size:18px">edit_note</span>Tasting notes · {{ ce.when }}</span>
+          <h3 style="margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:34px;line-height:1.05">{{ ce.role }}</h3>
+          <span style="font-size:15px;opacity:.75">{{ ce.org }}</span>
+          <sc-for list="{{ ce.groups }}" as="g" hint-placeholder-count="1">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-if value="{{ g.tag }}"><span style="align-self:flex-start;font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 9px;border-radius:999px;background:oklch(0.93 0.04 60);color:oklch(0.5 0.14 45)">{{ g.tag }}</span></sc-if>
+              <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.55">
+                <sc-for list="{{ g.pts }}" as="p" hint-placeholder-count="2"><li style="text-wrap:pretty">{{ p }}</li></sc-for>
+              </ul>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ s4 }}">
+  <section data-screen-label="05 Recipe box" style="min-height:100vh;padding:92px 44px 120px;display:flex;flex-direction:column;background:oklch(0.95 0.025 80)">
+    <div style="width:100%;max-width:1640px;margin:0 auto;flex:1;display:flex;flex-direction:column;gap:28px">
+      <div style="display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;animation:fadeUp .6s both">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:oklch(0.52 0.14 45)">Step 4 · The recipe box · Publications</span>
+          <h2 style="margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(40px,5vw,64px);line-height:1">Pull a card from the box</h2>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:12px">
+          <sc-for list="{{ cardFilters }}" as="f" hint-placeholder-count="3"><button onClick="{{ f.pick }}" style="cursor:pointer;font:inherit;padding:7px 14px;border-radius:999px;border:1px solid oklch(0.24 0.03 50 / 0.3);background:{{ f.bg }};color:{{ f.fg }}">{{ f.label }}</button></sc-for>
+        </div>
+      </div>
+      <div style="max-width:1280px;width:100%;margin:0 auto;flex:1;display:flex;flex-direction:column;justify-content:center">
+        <div style="position:relative;z-index:2;background:oklch(0.99 0.008 85);border-radius:10px;box-shadow:0 30px 50px -30px oklch(0.24 0.03 50 / 0.6);padding:clamp(28px,4vh,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:36px;background-image:repeating-linear-gradient(to bottom,transparent 0 29px,oklch(0.6 0.08 250 / 0.14) 29px 30px);animation:fadeUp .5s both">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="height:clamp(200px,32vh,360px);border-radius:8px;background:oklch(0.95 0.03 70);padding:16px">{{ cpViz }}</div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.5;color:oklch(0.5 0.14 45)">{{ cp.cap }}</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase"><span>Card {{ cp.n }}</span><span style="color:oklch(0.5 0.14 45)">{{ cp.tag }}</span></div>
+            <h3 style="margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(30px,3.6vh,42px);line-height:1.12;text-wrap:pretty">{{ cp.title }}</h3>
+            <span style="font-size:14px;line-height:1.5;opacity:.75">{{ cp.authors }}</span>
+            <em style="font-size:14px;opacity:.75">{{ cp.venue }}</em>
+            <button onClick="{{ nextCard }}" style="align-self:flex-start;display:flex;align-items:center;gap:6px;border:1px solid oklch(0.24 0.03 50 / 0.3);cursor:pointer;padding:9px 14px;border-radius:999px;background:transparent;color:inherit;font-family:'JetBrains Mono',monospace;font-size:12px">Next card<span style="font-family:'Material Symbols Rounded';font-size:18px">arrow_forward</span></button>
+          </div>
+        </div>
+        <div style="position:relative;margin-top:-30px;padding:44px 20px 0;border-radius:0 0 18px 18px;background:oklch(0.55 0.08 55);box-shadow:inset 0 10px 20px -10px oklch(0 0 0 / 0.4)">
+          <div style="display:flex;gap:6px;justify-content:center;align-items:flex-end">
+            <sc-for list="{{ cardTabs }}" as="t" hint-placeholder-count="8">
+              <button onClick="{{ t.pick }}" style="flex:1;max-width:130px;height:90px;border:0;cursor:pointer;border-radius:8px 8px 0 0;background:{{ t.bg }};transform:translateY({{ t.lift }});transition:transform .35s cubic-bezier(.3,1.5,.4,1);font-family:'JetBrains Mono',monospace;font-size:13px;color:oklch(0.24 0.03 50);display:flex;justify-content:center;padding-top:10px" style-hover="transform:translateY(-10px)">{{ t.n }}</button>
+            </sc-for>
+          </div>
+          <div style="height:60px;margin:0 -20px;border-radius:0 0 18px 18px;background:oklch(0.48 0.08 52);display:flex;align-items:center;justify-content:center"><span style="font-family:'Instrument Serif',serif;font-style:italic;font-size:22px;color:oklch(0.95 0.03 80)">Recipes by D. Chakraborty</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ s5 }}">
+  <section data-screen-label="06 Taste test" style="min-height:100vh;padding:92px 44px 120px;display:flex;flex-direction:column;background:oklch(0.93 0.03 160);background-image:linear-gradient(45deg,oklch(0.99 0.01 80 / 0.35) 25%,transparent 25%,transparent 75%,oklch(0.99 0.01 80 / 0.35) 75%),linear-gradient(45deg,oklch(0.99 0.01 80 / 0.35) 25%,transparent 25%,transparent 75%,oklch(0.99 0.01 80 / 0.35) 75%);background-size:60px 60px;background-position:0 0,30px 30px">
+    <div style="width:100%;max-width:1640px;margin:0 auto;flex:1;display:flex;flex-direction:column;gap:28px">
+      <div style="display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;animation:fadeUp .6s both">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:oklch(0.45 0.1 160)">Step 5 · Taste test · Projects</span>
+          <h2 style="margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(40px,5vw,64px);line-height:1">Lift a cloche to taste</h2>
+        </div>
+        <button onClick="{{ liftAll }}" style="border:1px solid oklch(0.24 0.03 50 / 0.3);background:oklch(0.99 0.008 85);cursor:pointer;padding:9px 14px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:12px;color:inherit">Lift all three</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:36px;align-items:center;flex:1;padding-top:40px">
+        <sc-for list="{{ plates }}" as="p" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
+            <div onClick="{{ p.lift }}" style="position:relative;width:min(440px,95%,46vh);aspect-ratio:1/0.8;cursor:pointer;display:flex;align-items:flex-end;justify-content:center">
+              <div style="position:absolute;left:0;right:0;bottom:0;height:46%;border-radius:50%;background:oklch(0.99 0.005 85);border:2px solid oklch(0.85 0.01 80);box-shadow:0 14px 24px -12px oklch(0.24 0.03 50 / 0.45)"></div>
+              <div style="position:absolute;left:14%;right:14%;bottom:12%;height:56%;border-radius:10px;background:oklch(0.97 0.02 80);padding:6px;box-shadow:0 4px 10px -6px oklch(0 0 0 / 0.3)">{{ p.vizEl }}</div>
+              <div style="position:absolute;left:6%;right:6%;bottom:18%;height:76%;transform:{{ p.cloche }};transform-origin:20% 100%;transition:transform .8s cubic-bezier(.3,1.3,.4,1);pointer-events:none">
+                <div style="position:absolute;left:50%;top:-6%;width:30px;height:18px;margin-left:-15px;border-radius:10px 10px 4px 4px;background:oklch(0.7 0.01 240)"></div>
+                <div style="position:absolute;inset:0;border-radius:200px 200px 10px 10px;background:radial-gradient(circle at 30% 25%,oklch(0.97 0.005 240),oklch(0.75 0.015 240) 60%,oklch(0.62 0.02 240));box-shadow:0 10px 20px -10px oklch(0 0 0 / 0.4)"></div>
+                <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:56px;color:oklch(0.45 0.02 240)">{{ p.no }}</span>
+              </div>
+            </div>
+            <sc-if value="{{ p.covered }}"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;opacity:.7">tap the cloche</span></sc-if>
+            <sc-if value="{{ p.lifted }}">
+              <div style="width:100%;background:oklch(0.99 0.008 85);border-radius:14px;padding:20px 22px;display:flex;flex-direction:column;gap:10px;animation:fadeUp .5s both;box-shadow:0 20px 40px -30px oklch(0.24 0.03 50 / 0.6)">
+                <h3 style="margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:26px;line-height:1.1">{{ p.t }}</h3>
+                <p style="margin:0;font-size:15px;line-height:1.55">{{ p.desc }}</p>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <sc-for list="{{ p.tags }}" as="t" hint-placeholder-count="3"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 9px;border-radius:999px;background:oklch(0.93 0.04 160)">{{ t }}</span></sc-for>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;padding-top:10px;border-top:1px dashed oklch(0.24 0.03 50 / 0.2)"><span style="font-family:'Material Symbols Rounded';font-size:20px;color:oklch(0.82 0.14 85)">star</span><span style="font-family:'Instrument Serif',serif;font-style:italic;font-size:19px">{{ p.yield }}</span></div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ s6 }}">
+  <section data-screen-label="07 Bake-off" style="min-height:100vh;padding:92px 44px 120px;display:flex;flex-direction:column;background:oklch(0.24 0.03 50);color:oklch(0.96 0.02 80)">
+    <div style="width:100%;max-width:1640px;margin:0 auto;flex:1;display:flex;flex-direction:column;gap:28px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:32px;animation:fadeUp .6s both">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:oklch(0.82 0.13 70)">Step 6 · The bake-off · Hackathon</span>
+          <h2 style="margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(40px,5vw,64px);line-height:1">AI Investment Spark Challenge</h2>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;opacity:.7">Sep 2026 · Team Vitality · TIAA · ASU W. P. Carey School of Business · AWS</span>
+        </div>
+        <p style="margin:0;align-self:end;font-size:16px;line-height:1.6;opacity:.9"><strong>FundSentinel.</strong> An AI approval committee for investment funds that routes itself and proves every decision. A five-agent data team profiles, cleans and documents any fund file with no setup. A seven-agent committee then reviews each fund: a Supervisor routes the work to four specialist reviewers, an Evidence checker demands proof, and a Decision owner rules. AI makes the judgements, while code does the maths, enforces hard rules and verifies every claim against the source data.</p>
+      </div>
+      <div style="position:relative;flex:1;align-items:center;border-radius:18px;background:oklch(0.98 0.01 80);color:oklch(0.24 0.03 50);overflow:hidden;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))">
+        <div style="grid-column:span 2;padding:24px;overflow-x:auto;min-width:0"><div style="min-width:560px;aspect-ratio:640/215">{{ fundViz }}</div></div>
+        <div style="background:oklch(0.3 0.02 50);color:oklch(0.96 0.02 80);padding:22px;display:flex;flex-direction:column;gap:12px">
+          <button onClick="{{ runFund }}" style="align-self:flex-start;display:flex;align-items:center;gap:8px;border:0;cursor:pointer;padding:12px 18px;border-radius:999px;background:oklch(0.82 0.13 70);color:oklch(0.24 0.03 50);font-family:'JetBrains Mono',monospace;font-size:12px"><span style="font-family:'Material Symbols Rounded';font-size:18px">gavel</span>{{ fundLabel }}</button>
+          <sc-for list="{{ fundLog }}" as="l" hint-placeholder-count="6">
+            <div style="display:flex;gap:10px;align-items:flex-start;opacity:{{ l.op }};transition:opacity .4s"><span style="font-family:'Material Symbols Rounded';font-size:18px;color:oklch(0.82 0.13 70)">{{ l.mark }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.5">{{ l.l }}</span></div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ won }}">
+          <div style="position:absolute;right:28px;top:20px;display:flex;flex-direction:column;align-items:center;animation:popIn .7s cubic-bezier(.3,1.6,.4,1) both">
+            <div style="width:110px;height:110px;border-radius:50%;background:repeating-conic-gradient(oklch(0.62 0.02 240) 0 10deg,oklch(0.78 0.01 240) 10deg 20deg);display:flex;align-items:center;justify-content:center;box-shadow:0 14px 24px -10px oklch(0 0 0 / 0.4)">
+              <div style="width:76px;height:76px;border-radius:50%;background:oklch(0.9 0.005 240);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1"><span style="font-family:'Instrument Serif',serif;font-size:34px">2nd</span><span style="font-family:'JetBrains Mono',monospace;font-size:9px">PLACE</span></div>
+            </div>
+            <div style="display:flex;gap:4px;margin-top:-6px"><span style="width:24px;height:46px;background:oklch(0.65 0.02 240);transform:skewX(10deg)"></span><span style="width:24px;height:46px;background:oklch(0.55 0.02 240);transform:skewX(-10deg)"></span></div>
+          </div>
+        </sc-if>
+      </div>
+      <a href="https://asuevents.asu.edu/event/ai-investment-spark-challenge" style="font-family:'JetBrains Mono',monospace;font-size:13px">Event ↗</a>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ s7 }}">
+  <section data-screen-label="08 Serve" style="min-height:100vh;padding:92px 44px 120px;display:flex;flex-direction:column;background:oklch(0.95 0.025 80)">
+    <div style="width:100%;max-width:1640px;margin:0 auto;flex:1;display:flex;flex-direction:column;justify-content:center;gap:40px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:40px;align-items:center">
+        <div style="display:flex;flex-direction:column;gap:16px;animation:fadeUp .6s both">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:oklch(0.52 0.14 45)">Order up · Awards & contact</span>
+          <h2 style="margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(44px,6vw,84px);line-height:.95">Your {{ recipeName }} is <em style="color:oklch(0.52 0.14 45)">ready</em>.</h2>
+          <div style="display:flex;gap:22px;flex-wrap:wrap">
+            <sc-for list="{{ summary }}" as="s" hint-placeholder-count="4"><div style="display:flex;flex-direction:column"><span style="font-family:'Instrument Serif',serif;font-size:44px;line-height:1">{{ s.v }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:.65">{{ s.k }}</span></div></sc-for>
+          </div>
+          <span style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:13px"><span style="font-family:'Material Symbols Rounded';font-size:20px;color:oklch(0.75 0.15 85)">star</span>{{ stars }} earned</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0;animation:dropIn .8s cubic-bezier(.3,1.3,.4,1) both">
+          <sc-if value="{{ isBerry }}">
+            <div style="display:flex;flex-direction:column;align-items:center;width:min(360px,90%)">
+              <div style="display:flex;gap:30px;margin-bottom:-4px;z-index:2">
+                <div style="display:flex;flex-direction:column;align-items:center"><span style="width:12px;height:20px;border-radius:50% 50% 40% 40%;background:oklch(0.82 0.17 70);transform-origin:50% 100%;animation:flicker .5s ease-in-out infinite"></span><span style="width:8px;height:40px;background:oklch(0.85 0.06 250)"></span></div>
+                <div style="display:flex;flex-direction:column;align-items:center"><span style="width:12px;height:20px;border-radius:50% 50% 40% 40%;background:oklch(0.82 0.17 70);transform-origin:50% 100%;animation:flicker .6s ease-in-out infinite"></span><span style="width:8px;height:40px;background:oklch(0.85 0.06 10)"></span></div>
+                <div style="display:flex;flex-direction:column;align-items:center"><span style="width:12px;height:20px;border-radius:50% 50% 40% 40%;background:oklch(0.82 0.17 70);transform-origin:50% 100%;animation:flicker .45s ease-in-out infinite"></span><span style="width:8px;height:40px;background:oklch(0.85 0.06 150)"></span></div>
+              </div>
+              <div style="display:flex;gap:8px;margin-bottom:-10px;z-index:1"><span style="width:24px;height:24px;border-radius:50%;background:oklch(0.5 0.18 15)"></span><span style="width:20px;height:20px;border-radius:50%;background:oklch(0.4 0.12 290)"></span><span style="width:24px;height:24px;border-radius:50%;background:oklch(0.5 0.18 15)"></span><span style="width:20px;height:20px;border-radius:50%;background:oklch(0.4 0.12 290)"></span><span style="width:24px;height:24px;border-radius:50%;background:oklch(0.5 0.18 15)"></span></div>
+              <div style="width:78%;height:60px;border-radius:16px 16px 6px 6px;background:oklch(0.97 0.01 85);border-bottom:10px solid oklch(0.86 0.07 10)"></div>
+              <div style="width:90%;height:70px;border-radius:6px;background:oklch(0.97 0.01 85);border-bottom:12px solid oklch(0.86 0.07 10)"></div>
+              <div style="width:100%;height:80px;border-radius:6px;background:oklch(0.97 0.01 85);border-bottom:12px solid oklch(0.86 0.07 10)"></div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ isBanana }}">
+            <div style="position:relative;width:min(380px,90%);height:200px">
+              <div style="position:absolute;left:0;right:0;bottom:0;height:150px;border-radius:30px 30px 14px 14px;background:oklch(0.55 0.11 55)"></div>
+              <div style="position:absolute;left:4%;right:4%;top:20px;height:90px;border-radius:120px 120px 30px 30px;background:oklch(0.48 0.1 50)"></div>
+              <div style="position:absolute;left:24%;right:24%;top:46px;height:10px;border-radius:6px;background:oklch(0.78 0.11 80)"></div>
+              <div style="position:absolute;left:30%;top:28px;width:90px;height:22px;border-radius:50%;background:oklch(0.88 0.12 95);transform:rotate(-8deg)"></div>
+            </div>
+          </sc-if>
+          <div style="width:min(440px,100%);height:20px;border-radius:50%;background:oklch(0.85 0.01 240);border:2px solid oklch(0.75 0.02 240)"></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase">Prize ribbons</span>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:24px">
+          <sc-for list="{{ awards }}" as="a" hint-placeholder-count="3">
+            <div style="display:flex;gap:18px;align-items:flex-start">
+              <div style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;transform-origin:50% 0;animation:{{ a.anim }}">
+                <div style="width:84px;height:84px;border-radius:50%;background:repeating-conic-gradient({{ a.rib }} 0 12deg,oklch(0.99 0.01 85) 12deg 16deg);display:flex;align-items:center;justify-content:center"><span style="width:56px;height:56px;border-radius:50%;background:oklch(0.99 0.01 85);display:flex;align-items:center;justify-content:center;font-family:'Material Symbols Rounded';font-size:28px;color:{{ a.rib }}">{{ a.icon }}</span></div>
+                <div style="display:flex;gap:3px;margin-top:-4px"><span style="width:18px;height:40px;background:{{ a.rib }};transform:skewX(10deg)"></span><span style="width:18px;height:40px;background:{{ a.rib }};opacity:.8;transform:skewX(-10deg)"></span></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:.6">{{ a.d }}</span>
+                <h3 style="margin:0;font-family:'Instrument Serif',serif;font-weight:400;font-size:24px;line-height:1.15">{{ a.t }}</h3>
+                <p style="margin:0;font-size:14px;line-height:1.5;opacity:.8">{{ a.x }}</p>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding:24px 28px;border-radius:16px;background:oklch(0.24 0.03 50);color:oklch(0.96 0.02 80)">
+        <span style="font-family:'Instrument Serif',serif;font-size:32px">Want a slice? Get in touch.</span>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:13px">
+          <a href="mailto:debaleena82001@gmail.com">debaleena82001@gmail.com</a>
+          <a href="https://github.com/debachaks">GitHub ↗</a>
+          <a href="Debaleena Portfolio.dc.html" onClick="{{ goHome }}">Back home</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const INK = 'oklch(0.24 0.03 50)', PAPER = 'oklch(0.98 0.01 80)';
+const STEPS = [['receipt_long', 'Order'], ['kitchen', 'Pantry'], ['blender', 'Mix'], ['local_fire_department', 'Oven'], ['menu_book', 'Recipe box'], ['restaurant', 'Taste'], ['emoji_events', 'Bake-off'], ['celebration', 'Serve']];
+const RECIPES = {
+  banana: { name: 'Banana Bread', icon: 'bakery_dining', kicker: 'Loaf · warm & dependable', blurb: 'One dense, golden loaf. Every skill folded into the same batter.', photo: 'banana bread photo goes here', hue: 70, batter: 'oklch(0.76 0.11 75)', crumb: 'oklch(0.6 0.11 55)', layers: ['oklch(0.72 0.11 70)', 'oklch(0.66 0.11 62)', 'oklch(0.6 0.11 55)'] },
+  berry: { name: 'Berry Chantilly', icon: 'cake', kicker: 'Layer cake · light & bright', blurb: 'Sponge, whipped chantilly and berries, one tier per degree.', photo: 'berry chantilly photo goes here', hue: 10, batter: 'oklch(0.88 0.05 20)', crumb: 'oklch(0.6 0.16 10)', layers: ['oklch(0.92 0.04 85)', 'oklch(0.86 0.07 10)', 'oklch(0.92 0.04 85)'] }
+};
+
+class Component extends DCLogic {
+  state = { menuOpen: false, step: 0, recipe: 'berry', added: [], layers: 0, whisking: false, rack: 0, baked: [false, false, false], baking: false, bakeT: 0, card: 0, cardFilter: 'all', lifted: [false, false, false], fundStep: -1, fault: 0, faultOn: false };
+  bowlRef = React.createRef();
+
+  componentDidMount() {
+    const wait = () => { if (window.makeViz && window.DPData) { this.V = window.makeViz(React); this.D = window.DPData; this.forceUpdate(); } else setTimeout(wait, 60); };
+    wait();
+    this.onKey = e => { if (e.key === 'ArrowRight') this.go(this.state.step + 1); if (e.key === 'ArrowLeft') this.go(this.state.step - 1); };
+    window.addEventListener('keydown', this.onKey);
+  }
+  componentWillUnmount() { window.removeEventListener('keydown', this.onKey); clearInterval(this.bakeI); clearInterval(this.fundT); clearTimeout(this.whT); }
+
+  go = n => { const s = Math.max(0, Math.min(STEPS.length - 1, n)); this.setState({ step: s, menuOpen: false }); window.scrollTo({ top: 0 }); };
+
+  addJar = (i, e) => {
+    if (this.state.added.includes(i)) return;
+    const from = e && e.currentTarget && e.currentTarget.getBoundingClientRect(), bowl = this.bowlRef.current;
+    if (from && bowl) {
+      const to = bowl.getBoundingClientRect(), el = document.createElement('div');
+      el.textContent = (this.D.elements[i] || [])[0] || '';
+      Object.assign(el.style, { position: 'fixed', left: from.left + from.width / 2 - 22 + 'px', top: from.top + 20 + 'px', width: '44px', height: '44px', borderRadius: '50%', background: RECIPES[this.state.recipe].batter, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Instrument Serif, serif', fontSize: '22px', zIndex: 50, pointerEvents: 'none', boxShadow: '0 8px 16px -8px rgba(0,0,0,.4)' });
+      document.body.appendChild(el);
+      const dx = to.left + to.width / 2 - (from.left + from.width / 2), dy = to.top + to.height * 0.35 - (from.top + 20);
+      el.animate([{ transform: 'translate(0,0) scale(1)' }, { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - 140}px) scale(1.2) rotate(180deg)` }, { transform: `translate(${dx}px, ${dy}px) scale(.4) rotate(360deg)`, opacity: 0.2 }], { duration: 750, easing: 'cubic-bezier(.4,0,.6,1)', fill: 'forwards' });
+      setTimeout(() => el.remove(), 800);
+      setTimeout(() => this.setState(s => ({ added: s.added.includes(i) ? s.added : s.added.concat(i) })), 650);
+    } else this.setState(s => ({ added: s.added.concat(i) }));
+  };
+
+  whisk = () => {
+    if (this.state.whisking || this.state.layers >= 3) return;
+    this.setState({ whisking: true });
+    this.whT = setTimeout(() => this.setState(s => ({ whisking: false, layers: s.layers + 1 })), 1300);
+  };
+
+  bake = () => {
+    if (this.state.baking) return; clearInterval(this.bakeI);
+    this.setState({ baking: true, bakeT: 5 });
+    this.bakeI = setInterval(() => this.setState(s => {
+      if (s.bakeT <= 1) { clearInterval(this.bakeI); const b = s.baked.slice(); b[s.rack] = true; return { baking: false, bakeT: 0, baked: b }; }
+      return { bakeT: s.bakeT - 1 };
+    }), 700);
+  };
+
+  runFund = () => {
+    clearInterval(this.fundT); this.setState({ fundStep: 0 });
+    this.fundT = setInterval(() => this.setState(s => { if (s.fundStep >= 5) { clearInterval(this.fundT); return null; } return { fundStep: s.fundStep + 1 }; }), 1000);
+  };
+
+  renderVals() {
+    const st = this.state, V = this.V, D = this.D || { pubs: [], exp: [], edu: [], projects: [], elements: [], awards: [], news: [], fundLog: [] };
+    const R = RECIPES[st.recipe], accent = 'oklch(0.55 0.14 50)';
+    const done = [true, st.added.length >= 13, st.layers >= 3, st.baked.every(Boolean), st.card > 0 || st.cardSeen, st.lifted.every(Boolean), st.fundStep >= 5, st.step === 7];
+    const stars = st.added.length + st.layers * 2 + st.baked.filter(Boolean).length * 3 + st.lifted.filter(Boolean).length * 2 + (st.fundStep >= 5 ? 5 : 0);
+    const groupHues = [250, 160, 300, 55, 20];
+    const ce = D.exp[st.rack] || { groups: [] };
+    const pubList = D.pubs.map((p, i) => ({ p, i })).filter(({ p }) => st.cardFilter === 'all' || (st.cardFilter === 'pub' ? p[3] : !p[3]));
+    const sel = pubList.some(x => x.i === st.card) ? st.card : (pubList[0] ? pubList[0].i : 0), cp = D.pubs[sel] || [];
+    const sv = {}; for (let i = 0; i < 8; i++) sv['s' + i] = st.step === i;
+
+    return Object.assign(sv, {
+      goHome: e => { if (this.props.onHome) { e && e.preventDefault(); this.props.onHome(); } }, 
+      bowlRef: this.bowlRef, menuOpen: st.menuOpen, toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      curIcon: STEPS[st.step][0], curLabel: STEPS[st.step][1], progressDeg: ((st.step + 1) / STEPS.length * 360) + 'deg',
+      dialItems: STEPS.map(([icon, label], i) => { const ang = (Math.PI / 2) * (i / (STEPS.length - 1)), rad = 250; return { icon, label, go: () => this.go(i), done: done[i] && i > 0,
+        r: (Math.sin(ang) * rad + 20).toFixed(0) + 'px', b: (Math.cos(ang) * rad + 20).toFixed(0) + 'px', delay: (i * 0.03) + 's',
+        bg: i === st.step ? 'oklch(0.62 0.16 50)' : 'oklch(0.99 0.008 85)', fg: i === st.step ? 'oklch(0.99 0.01 80)' : 'oklch(0.24 0.03 50)' }; }), next: () => this.go(st.step + 1), prev: () => this.go(st.step - 1),
+      recipeName: R.name, recipeIcon: R.icon, batter: R.batter, crumb: R.crumb, isBerry: st.recipe === 'berry', isBanana: st.recipe === 'banana',
+      stars: stars + ' stars', progressTxt: `${st.step + 1} / ${STEPS.length}`, progressPct: ((st.step + 1) / STEPS.length * 100) + '%',
+      stepTabs: STEPS.map(([icon, label], i) => ({ icon, label, go: () => this.go(i), done: done[i] && i > 0 && i !== st.step, on: i === st.step, off: i !== st.step, num: String(i + 1).padStart(2, '0') })),
+      recipes: Object.entries(RECIPES).map(([k, r]) => { const on = k === st.recipe, ink = `oklch(0.52 0.15 ${r.hue})`;
+        return { name: r.name, icon: r.icon, kicker: r.kicker, blurb: r.blurb, photo: r.photo, on, ink, pick: () => this.setState({ recipe: k }),
+          border: on ? ink : 'oklch(0.24 0.03 50 / 0.12)', shadow: on ? `0 24px 50px -24px ${ink}` : 'none', tf: on ? 'translateY(-4px)' : 'none',
+          stripes: `repeating-linear-gradient(135deg, oklch(0.92 0.04 ${r.hue}) 0 14px, oklch(0.95 0.03 ${r.hue}) 14px 28px)` }; }),
+      tickets: D.news.map(([d, t, icon, kind], i) => ({ d, t, icon, kind, no: String(D.news.length - i).padStart(3, '0'), anim: `swing ${3 + (i % 4) * 0.5}s ease-in-out ${-i * 0.4}s infinite` })),
+      jars: D.elements.map(([sym, name, group, g], i) => { const on = st.added.includes(i);
+        return { sym, name, group, add: e => this.addJar(i, e), glass: `oklch(0.9 0.05 ${groupHues[g]} / 0.65)`, lid: `oklch(0.5 0.1 ${groupHues[g]})`, op: on ? 0.3 : 1, tf: on ? 'translateY(4px) scale(.94)' : 'none', fill: on ? '12%' : '70%' }; }),
+      addAll: () => this.setState({ added: D.elements.map((_, i) => i) }), addedTxt: `${st.added.length} / ${D.elements.length} in the bowl`,
+      bowlFill: Math.min(88, 14 + st.added.length * 6) + '%',
+      bowlChips: st.added.map(i => ({ name: (D.elements[i] || [])[1] })),
+      lastAdded: st.added.length ? (() => { const e = D.elements[st.added[st.added.length - 1]] || []; return `${e[1]} · ${e[2]}`; })() : 'Tap a jar to tip it in',
+      allIn: st.added.length >= D.elements.length,
+      whisk: this.whisk, whiskAnim: st.whisking ? 'wobble .25s linear infinite' : 'none', whiskLabel: st.layers >= 3 ? 'All layers done' : st.whisking ? 'Whisking…' : `Whisk layer ${['I', 'II', 'III'][st.layers]}`,
+      layers: D.edu.slice(0, st.layers).map((e, i) => Object.assign({ color: R.layers[i] }, e)).reverse(), layersDone: st.layers >= 3, layerCount: st.layers,
+      racks: D.exp.map((e, i) => ({ label: e.org.split(',')[0].split(' ·')[0], ch: 'Rack ' + (i + 1), icon: e.icon, pick: () => !st.baking && this.setState({ rack: i, faultOn: false }), on: i === st.rack, baked: st.baked[i], bg: i === st.rack ? accent : 'oklch(0.3 0.02 50)', rot: st.baked[i] ? '180deg' : '0deg' })),
+      ce, bake: this.bake, baking: st.baking, rackBaked: st.baked[st.rack], bakeLabel: st.baking ? `Baking… ${st.bakeT}` : st.baked[st.rack] ? 'Bake again' : 'Bake this rack',
+      ovenGlow: st.baking ? 'inset 0 0 80px oklch(0.75 0.2 50 / 0.9), 0 0 60px oklch(0.75 0.2 50 / 0.5)' : 'inset 0 0 30px oklch(0 0 0 / 0.6)',
+      ovenTime: st.baking ? `00:0${st.bakeT}` : st.baked[st.rack] ? 'DONE' : 'READY',
+      scope: V && ce.key ? V.scope(ce.key, 'oklch(0.7 0.19 45)', st.faultOn ? st.fault : 0) : null,
+      isProton: ce.key === 'proton', injectFault: () => { this.setState(s => ({ fault: s.fault + 1, faultOn: true })); setTimeout(() => this.setState({ faultOn: false }), 2600); },
+      bakedCount: st.baked.filter(Boolean).length,
+      cardFilters: [['all', 'All recipes'], ['pub', 'Tried & tested'], ['rev', 'In development']].map(([k, l]) => ({ label: l, pick: () => this.setState({ cardFilter: k }), bg: k === st.cardFilter ? INK : 'transparent', fg: k === st.cardFilter ? PAPER : INK })),
+      cardTabs: pubList.map(({ p, i }) => ({ n: String(i + 1).padStart(2, '0'), pick: () => this.setState({ card: i, cardSeen: true }), lift: i === sel ? '-18px' : '0px', bg: i === sel ? 'oklch(0.99 0.008 85)' : `oklch(0.93 0.04 ${[20, 70, 150, 250][i % 4]})` })),
+      cp: { title: cp[0], authors: cp[1], venue: cp[2], tag: cp[3] ? 'Tried & tested · ' + cp[3] : 'In development · under review', cap: cp[5], n: String(sel + 1).padStart(2, '0') },
+      cpViz: V && cp[4] ? V.viz(cp[4], accent) : null,
+      nextCard: () => { const ids = pubList.map(x => x.i), j = ids.indexOf(sel); this.setState({ card: ids[(j + 1) % ids.length], cardSeen: true }); },
+      plates: D.projects.map((p, i) => ({ t: p.t, desc: p.desc, tags: p.tags, yield: p.yield, no: i + 1, vizEl: V ? V.viz(p.viz, accent) : null, lifted: st.lifted[i], covered: !st.lifted[i],
+        lift: () => this.setState(s => { const l = s.lifted.slice(); l[i] = !l[i]; return { lifted: l }; }), cloche: st.lifted[i] ? 'translate(38%, -48%) rotate(28deg) scale(.6)' : 'none' })),
+      liftAll: () => this.setState({ lifted: [true, true, true] }),
+      runFund: this.runFund, fundViz: V ? V.fund(accent, st.fundStep) : null, won: st.fundStep >= 5,
+      fundLabel: st.fundStep >= 5 ? 'Present again' : st.fundStep >= 0 ? 'Judging…' : 'Present to the judges',
+      fundLog: D.fundLog.map((l, i) => ({ l, op: i <= st.fundStep ? 1 : 0.3, mark: i < st.fundStep || st.fundStep >= 5 ? 'check_circle' : i === st.fundStep ? 'hourglass_top' : 'radio_button_unchecked' })),
+      awards: D.awards.map((a, i) => Object.assign({ anim: `swing ${2.6 + i * 0.4}s ease-in-out ${-i}s infinite`, rib: ['oklch(0.55 0.15 250)', 'oklch(0.55 0.15 10)', 'oklch(0.6 0.13 150)'][i] }, a)),
+      summary: [[st.added.length, 'ingredients'], [st.layers, 'layers'], [st.baked.filter(Boolean).length, 'racks baked'], [st.lifted.filter(Boolean).length, 'dishes tasted']].map(([v, k]) => ({ v, k }))
+    });
+  }
+}
+</script>
+</body>
+</html>

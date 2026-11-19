@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="dp-data.js"></script>
+<script src="dp-viz.js"></script>
+<script src="dp-reveal.js"></script>
+<style>
+body{margin:0;background:oklch(0.93 0.005 90);color:oklch(0.2 0.01 260);font-family:'Source Serif 4',Georgia,serif;-webkit-font-smoothing:antialiased}
+a{color:oklch(0.45 0.15 255);text-decoration-thickness:1px;text-underline-offset:2px}
+a:hover{color:oklch(0.5 0.17 25)}
+*{box-sizing:border-box}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+@keyframes ring{0%{transform:scale(.5);opacity:1}100%{transform:scale(2.4);opacity:0}}
+@keyframes draw{0%{stroke-dashoffset:400}60%,100%{stroke-dashoffset:0}}
+@keyframes bar{0%,10%{transform:scaleY(var(--a))}35%{transform:scaleY(var(--b))}60%,85%{transform:scaleY(.5)}100%{transform:scaleY(var(--a))}}
+@keyframes sweep{from{transform:translateX(0)}to{transform:translateX(156px)}}
+@keyframes phase{0%,100%{transform:translateX(0)}50%{transform:translateX(20px)}}
+@keyframes reorder{0%,20%{transform:translateY(0)}40%,80%{transform:translateY(var(--dy))}100%{transform:translateY(0)}}
+@keyframes scrollW{to{transform:translateX(var(--w))}}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+
+<div style="position:sticky;top:0;z-index:20;height:3px;background:oklch(0.2 0.01 260 / 0.08)"><div ref="{{ progRef }}" style="height:100%;background:oklch(0.45 0.15 255);transform-origin:left center"></div></div>
+
+<div style="max-width:1280px;margin:28px auto;background:oklch(0.99 0.003 90);box-shadow:0 30px 80px -40px oklch(0 0 0 / 0.35);padding:48px clamp(20px,5vw,72px) 72px">
+  <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:11px;color:oklch(0.45 0.01 260);border-bottom:1px solid oklch(0.2 0.01 260 / 0.15);padding-bottom:12px">
+    <span>Research portfolio · preprint v3 · updated Sep 2026</span>
+    <span><a href="Debaleena Portfolio.dc.html" onClick="{{ goHome }}">home</a> · <a href="mailto:debaleena82001@gmail.com">contact</a> · <a href="https://github.com/debachaks">code</a></span>
+  </div>
+
+  <header data-screen-label="Title" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:44px 0 32px">
+    <h1 data-reveal="fade" style="margin:0;font-weight:600;font-size:clamp(32px,4.4vw,56px);line-height:1.12;max-width:20ch;text-wrap:balance">Detecting faults before they find you: hardware security, telemetry and learning at the edge</h1>
+    <div data-reveal="fade" data-delay="150" style="display:flex;align-items:center;gap:12px;font-size:20px"><img src="https://debachaks.github.io/portfolio/images/profile.jpg" alt="Debaleena Chakraborty" style="width:44px;height:44px;border-radius:50%;object-fit:cover">Debaleena Chakraborty<sup>1</sup></div>
+    <div data-reveal="fade" data-delay="250" style="font-size:15px;font-style:italic;color:oklch(0.4 0.01 260)"><sup>1</sup>PROTON Lab, Arizona State University, Tempe, USA · advised by Dr. Eirini Eleni Tsiropoulou</div>
+  </header>
+
+  <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:36px;align-items:start">
+    <section data-reveal="up" data-screen-label="Abstract" style="padding:24px 28px;background:oklch(0.97 0.005 90);border-left:3px solid oklch(0.45 0.15 255);font-size:18px;line-height:1.65">
+      <div style="font-weight:600;font-size:14px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px">Abstract</div>
+      <p style="margin:0;text-wrap:pretty">I'm a PhD student in Computer Engineering at Arizona State University, advised by <a href="https://sites.google.com/view/eirini-eleni-tsiropoulou/home?authuser=0">Dr. Eirini Eleni Tsiropoulou</a> in the PROTON Lab. My PhD research, in collaboration with <a href="https://www.sandia.gov">Sandia National Laboratories</a>, focuses on hardware security, fault analysis and survivable electronics. I also contribute to <a href="https://sites.google.com/view/factory-ai/home">FACTORY-AI</a>, an NSF-funded project on AI-native industrial IoT networks for smart manufacturing.</p>
+      <p style="margin:12px 0 0;font-size:15px"><strong>Keywords:</strong> <em>Hardware Security · Fault Analysis · Survivable Electronics · Machine Learning · Industrial IoT Networks</em></p>
+      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px;padding-top:14px;border-top:1px solid oklch(0.2 0.01 260 / 0.12)">
+        <sc-for list="{{ nums }}" as="s" hint-placeholder-count="4"><div style="display:flex;flex-direction:column"><span style="font-size:32px;font-weight:600;line-height:1">{{ s.v }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;opacity:.6">{{ s.k }}</span></div></sc-for>
+      </div>
+    </section>
+    <aside data-reveal="right" data-screen-label="Revision history" style="display:flex;flex-direction:column;gap:6px;border-top:2px solid currentColor;padding-top:10px;max-height:460px;overflow-y:auto">
+      <span style="font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase">Revision history · news</span>
+      <sc-for list="{{ news }}" as="n" hint-placeholder-count="10">
+        <div style="display:grid;grid-template-columns:66px minmax(0,1fr);gap:10px;padding:6px 0;border-bottom:1px solid oklch(0.2 0.01 260 / 0.1)"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:oklch(0.45 0.15 255);padding-top:2px">{{ n.d }}</span><span style="font-size:14px;line-height:1.45">{{ n.t }}</span></div>
+      </sc-for>
+    </aside>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:6px;margin:56px 0 0">
+    <h2 data-reveal="left" style="margin:0;font-size:28px;font-weight:600">1&nbsp;&nbsp;Methods: a research trajectory in six figures</h2>
+    <p data-reveal="up" style="margin:0;font-size:17px;color:oklch(0.4 0.01 260)">Scroll through §1.1–1.6. Figure 1 updates with each subsection.</p>
+  </div>
+
+  <div data-screen-label="Scroll figures" style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px)">
+    <figure style="position:sticky;top:0;height:100vh;margin:0;display:flex;flex-direction:column;justify-content:center;gap:12px">
+      <div style="position:relative;aspect-ratio:600/320;overflow:hidden;border:1px solid oklch(0.2 0.01 260 / 0.25);background:oklch(0.17 0.02 200)">
+        <sc-for list="{{ visuals }}" as="v" hint-placeholder-count="0">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:22px;background:{{ v.bg }};opacity:{{ v.op }};transform:scale({{ v.sc }});transition:opacity .7s,transform .9s cubic-bezier(.2,.7,.2,1)">{{ v.el }}</div>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:6px"><sc-for list="{{ dots }}" as="d" hint-placeholder-count="6"><span style="flex:1;height:3px;background:{{ d.bg }};transition:background .4s"></span></sc-for></div>
+      <figcaption style="font-size:15px;line-height:1.5"><strong>Figure 1{{ figLetter }}.</strong> {{ figCap }}</figcaption>
+    </figure>
+    <div style="display:flex;flex-direction:column">
+      <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="6">
+        <article data-ch="{{ c.i }}" style="min-height:92vh;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:40px 0;opacity:{{ c.op }};transition:opacity .6s;font-size:18px;line-height:1.65">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:oklch(0.45 0.15 255)">§1.{{ c.n }} · {{ c.tag }}</span>
+          <h3 style="margin:0;font-size:clamp(26px,2.6vw,36px);font-weight:600;line-height:1.15">{{ c.h }}</h3>
+          <p style="margin:0;text-wrap:pretty">{{ c.p }} (Fig. 1{{ c.letter }})</p>
+          <ol style="margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px;font-size:16px"><sc-for list="{{ c.items }}" as="it" hint-placeholder-count="0"><li><span>{{ it.a }}</span><sc-if value="{{ it.b }}"> <span style="color:oklch(0.45 0.01 260);font-style:italic">({{ it.b }})</span></sc-if></li></sc-for></ol>
+        </article>
+      </sc-for>
+    </div>
+  </div>
+
+  <section data-screen-label="Results" style="display:flex;flex-direction:column;gap:14px;margin-top:40px">
+    <h2 data-reveal="left" style="margin:0;font-size:28px;font-weight:600">2&nbsp;&nbsp;Results: publications</h2>
+    <p data-reveal="up" style="margin:0;font-size:17px;color:oklch(0.4 0.01 260)">Select a reference to load its schematic in Figure 2.</p>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,0.85fr);gap:40px">
+      <div style="display:flex;flex-direction:column">
+        <sc-for list="{{ refs }}" as="r" hint-placeholder-count="8">
+          <button data-reveal="up" onClick="{{ r.pick }}" style="display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;text-align:left;padding:12px 10px;border:0;border-top:1px solid oklch(0.2 0.01 260 / 0.1);background:{{ r.bg }};color:inherit;cursor:pointer;font:inherit;font-size:16px;line-height:1.45;transition:background .25s" style-hover="background:oklch(0.96 0.015 255)">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:oklch(0.45 0.15 255)">[{{ r.n }}]</span>
+            <span>{{ r.authors }}. “{{ r.title }}.” <em>{{ r.venue }}</em>{{ r.yr }}.</span>
+          </button>
+        </sc-for>
+      </div>
+      <figure style="margin:0;position:sticky;top:30px;align-self:start;display:flex;flex-direction:column;gap:12px">
+        <div style="aspect-ratio:2/1.2;background:oklch(0.97 0.005 90);border:1px solid oklch(0.2 0.01 260 / 0.15);padding:14px">{{ figViz }}</div>
+        <figcaption style="font-size:15px;line-height:1.5"><strong>Figure 2.</strong> {{ fig.cap }}. Schematic for reference [{{ fig.n }}].</figcaption>
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px">
+          <sc-for list="{{ refs }}" as="r" hint-placeholder-count="8"><button onClick="{{ r.pick }}" title="{{ r.title }}" style="aspect-ratio:2/1.2;padding:4px;border:1px solid oklch(0.2 0.01 260 / 0.15);background:{{ r.bg }};cursor:pointer">{{ r.viz }}</button></sc-for>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section data-reveal="up" data-screen-label="Acknowledgements" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:36px;margin-top:56px;padding-top:24px;border-top:2px solid currentColor">
+    <div style="display:flex;flex-direction:column;gap:10px"><h2 style="margin:0;font-size:22px;font-weight:600">Acknowledgements</h2><sc-for list="{{ awards }}" as="a" hint-placeholder-count="3"><p style="margin:0;font-size:16px;line-height:1.55"><strong>{{ a.t }}</strong> ({{ a.d }}). {{ a.x }}</p></sc-for></div>
+    <div style="display:flex;flex-direction:column;gap:10px"><h2 style="margin:0;font-size:22px;font-weight:600">Correspondence</h2><p style="margin:0;font-size:16px;line-height:1.6">Debaleena Chakraborty, PROTON Lab, Arizona State University, Tempe, USA.<br><a href="mailto:debaleena82001@gmail.com">debaleena82001@gmail.com</a> · <a href="https://github.com/debachaks">GitHub</a></p><p style="margin:0;font-size:14px;color:oklch(0.4 0.01 260)">Materials: Python · SQL · TensorFlow · PyTorch · MLflow · AWS · Docker · Signal Processing</p></div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { ch: 0, fs: -1, fault: 0, projI: 0, fig: 0 };
+  progRef = React.createRef();
+  componentDidMount() {
+    const wait = () => { if (window.makeViz && window.DPData) { this.V = window.makeViz(React); this.D = window.DPData; this.forceUpdate(); } else setTimeout(wait, 60); };
+    wait();
+    this.onScroll = () => {
+      const se = document.scrollingElement; if (this.progRef.current && se) this.progRef.current.style.transform = `scaleX(${se.scrollTop / Math.max(1, se.scrollHeight - se.clientHeight)})`;
+      const arts = document.querySelectorAll('[data-ch]'); let ch = 0, prog = 0;
+      arts.forEach((el, i) => { const r = el.getBoundingClientRect(); if (r.top < window.innerHeight * 0.55) { ch = i; prog = Math.max(0, Math.min(1, (window.innerHeight * 0.55 - r.top) / r.height)); } });
+      const fs = ch === 5 ? Math.min(5, Math.floor(prog * 7)) : -1;
+      if (ch !== this.state.ch || fs !== this.state.fs) this.setState({ ch, fs });
+    };
+    document.addEventListener('scroll', this.onScroll, true);
+    this.faultI = setInterval(() => { if (this.state.ch === 3) this.setState(s => ({ fault: s.fault + 1 })); }, 3200);
+    this.projT = setInterval(() => { if (this.state.ch === 4) this.setState(s => ({ projI: (s.projI + 1) % 3 })); }, 3000);
+  }
+  componentDidUpdate() { window.dpReveal && window.dpReveal(); }
+  componentWillUnmount() { document.removeEventListener('scroll', this.onScroll, true); clearInterval(this.faultI); clearInterval(this.projT); }
+  renderVals() {
+    const st = this.state, V = this.V, D = this.D || { pubs: [], exp: [], edu: [], projects: [], awards: [], news: [] };
+    const B = 'oklch(0.45 0.15 255)', RED = 'oklch(0.68 0.19 30)', PAPER = 'oklch(0.97 0.005 90)', E = k => D.exp.find(e => e.key === k) || { groups: [], org: '' };
+    const pts = k => E(k).groups.flatMap(g => g.pts.map(p => ({ a: p, b: g.tag ? g.tag : '' })));
+    const pj = D.projects[st.projI] || {}, L = 'abcdef';
+    const chapters = [
+      { tag: 'IISc Bangalore · May – Jul 2022', h: 'Signal decomposition', p: 'As a Summer Research Fellow at IISc Bangalore, EEG recordings were broken into time-frequency atoms with the Matching Pursuit algorithm.', items: pts('iisc'), vis: 'iisc', cap: 'EEG trace (top) and the atoms Matching Pursuit extracts from it (bottom).' },
+      { tag: 'IIIT Guwahati → Arizona State University', h: 'Training', p: 'Three degrees, from electronics and communication to computer engineering.', items: D.edu.map(e => ({ a: `${e.deg}, ${e.school}`, b: `${e.when} · ${e.gpa}` })), vis: 'edu', cap: 'Degrees in sequence, 2019 → 2029 (expected).' },
+      { tag: 'ZS Associates · Sep 2023 – Jun 2024', h: 'Data pipelines at scale', p: 'As a Data Engineer at ZS Associates, the focus was ETL performance and data quality.', items: pts('zs'), vis: 'zs', cap: 'Records flow through extract, transform and load; the QC gate rejects bad rows.' },
+      { tag: 'PROTON Lab · May 2025 – present', h: 'Zero-label fault detection', p: 'At the PROTON Lab, with Sandia National Laboratories, hardware telemetry is monitored for fault-induced attacks without labelled data.', items: pts('proton'), vis: 'proton', cap: 'Register telemetry inside a consensus band. A fault is injected every few seconds and flagged.' },
+      { tag: 'Projects', h: 'Applied builds', p: 'Three projects across MLOps, LLM agents and deep learning; the figure cycles through each.', items: D.projects.map(p => ({ a: p.t, b: p.desc })), vis: 'proj', cap: (pj.t || '') + '.' },
+      { tag: 'AI Investment Spark Challenge · Sep 2026', h: 'A committee that proves itself', p: 'FundSentinel won 2nd place with Team Vitality (TIAA · ASU W. P. Carey School of Business · AWS). Continue scrolling to advance the fund through each agent.', items: [{ a: 'A five-agent data team profiles, cleans and documents any fund file with no setup.', b: '' }, { a: 'A Supervisor routes the work to four specialist reviewers, an Evidence checker demands proof, and a Decision owner rules.', b: '' }, { a: 'AI makes the judgements, while code does the maths, enforces hard rules and verifies every claim against the source data.', b: '' }], vis: 'fund', cap: 'FundSentinel agents: data team → Supervisor → reviewers → Evidence checker → Decision owner.' }
+    ];
+    const eduEl = React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 10, width: '100%' } }, ...D.edu.map((e, i) => React.createElement('div', { key: i, style: { display: 'grid', gridTemplateColumns: '40px 1fr', gap: 12, alignItems: 'center', padding: '10px 14px', border: '1px solid oklch(0.2 0.01 260 / 0.2)', background: i === 2 ? 'oklch(0.93 0.04 255)' : 'oklch(0.99 0.003 90)', transform: st.ch === 1 ? 'none' : 'translateX(-30px)', opacity: st.ch === 1 ? 1 : 0, transition: `all .7s ${i * 0.15}s`, fontFamily: 'Source Serif 4, serif', fontSize: 'clamp(14px, 1.4vw, 19px)', lineHeight: 1.25 } },
+      React.createElement('span', { style: { fontFamily: 'JetBrains Mono, monospace', color: B } }, e.roman), e.deg)));
+    const els = V ? { iisc: V.scope('iisc', RED, 0), zs: V.scope('zs', RED, 0), proton: V.scope('proton', RED, st.fault), edu: eduEl, proj: pj.viz ? V.viz(pj.viz, B) : null, fund: V.fund(B, st.fs) } : {};
+    const light = { edu: 1, proj: 1, fund: 1 };
+    const fp = D.pubs[st.fig] || [];
+    return {
+      goHome: e => { if (this.props.onHome) { e && e.preventDefault(); this.props.onHome(); } }, progRef: this.progRef,
+      nums: [['4.0', 'GPA · M.S.'], ['8', 'publications'], ['3', 'awards'], ['2nd', 'Spark Challenge']].map(([v, k]) => ({ v, k })),
+      news: D.news.map(([d, t]) => ({ d, t })),
+      chapters: chapters.map((c, i) => ({ i, n: i + 1, letter: L[i], tag: c.tag, h: c.h, p: c.p, items: c.items, op: i === st.ch ? 1 : 0.3 })),
+      visuals: chapters.map((c, i) => ({ el: els[c.vis] || null, op: i === st.ch ? 1 : 0, sc: i === st.ch ? 1 : 0.95, bg: light[c.vis] ? PAPER : 'oklch(0.17 0.02 200)' })),
+      figLetter: L[st.ch], figCap: (chapters[st.ch] || {}).cap,
+      dots: chapters.map((c, i) => ({ bg: i <= st.ch ? B : 'oklch(0.2 0.01 260 / 0.12)' })),
+      refs: D.pubs.map((p, i) => ({ n: i + 1, title: p[0], authors: p[1], venue: p[2], yr: p[3] ? ', ' + p[3] : ' (under review)', viz: V ? V.viz(p[4], B) : null, pick: () => this.setState({ fig: i }), bg: i === st.fig ? 'oklch(0.95 0.02 255)' : 'oklch(0.99 0.003 90 / 0)' })),
+      fig: { n: st.fig + 1, cap: fp[5] }, figViz: V && fp[4] ? V.viz(fp[4], B) : null,
+      awards: D.awards
+    };
+  }
+}
+</script>
+</body>
+</html>
