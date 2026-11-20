@@ -1,1002 +1,111 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Debaleena Chakraborty | Portfolio</title>
-
-  <!-- Theme: light by default; "dark" class on <html> switches to dark. Applied before paint to avoid a flash. -->
-  <script>
-    try {
-      if (localStorage.getItem("theme") === "dark") document.documentElement.classList.add("dark");
-    } catch (e) {}
-  </script>
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    // Tailwind colour names point at CSS variables, so each theme only swaps the variable values below.
-    const themed = (name, shades) =>
-      Object.fromEntries(shades.map(s => [s, `rgb(var(--${name}-${s}) / <alpha-value>)`]));
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            slate: themed("slate", [100, 200, 300, 400, 500, 600, 700, 800, 900, 950]),
-            blue: themed("blue", [100, 300, 400, 500, 700]),
-            emerald: themed("emerald", [300, 400, 500]),
-            amber: themed("amber", [300, 400, 500]),
-            white: "rgb(var(--white) / <alpha-value>)",
-            black: "rgb(var(--black) / <alpha-value>)",
-          },
-        },
-      },
-    };
-  </script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  />
-
-  <style>
-    /* Light theme (default): warm linen neutrals, sage accent, ochre for hackathons.
-       Neutral shades are inverted so each class keeps its role (950 = page, 100 = headings). */
-    :root {
-      --slate-950: 244 241 234;
-      --slate-900: 237 232 222;
-      --slate-800: 251 249 244;
-      --slate-700: 221 214 200;
-      --slate-600: 184 175 159;
-      --slate-500: 125 117 104;
-      --slate-400: 95 88 77;
-      --slate-300: 74 68 59;
-      --slate-200: 58 53 46;
-      --slate-100: 43 39 34;
-      --white: 35 32 27;
-      --black: 120 105 80;
-
-      --blue-100: 238 243 236;
-      --blue-300: 70 98 78;
-      --blue-400: 84 115 92;
-      --blue-500: 122 152 128;
-      --blue-700: 84 112 90;
-
-      --emerald-300: 52 108 82;
-      --emerald-400: 92 156 118;
-      --emerald-500: 92 156 118;
-
-      --amber-300: 146 96 40;
-      --amber-400: 200 145 75;
-      --amber-500: 190 136 68;
-
-      color-scheme: light;
-    }
-
-    /* Dark theme: Tailwind's default slate/blue palette */
-    html.dark {
-      --slate-950: 2 6 23;
-      --slate-900: 15 23 42;
-      --slate-800: 30 41 59;
-      --slate-700: 51 65 85;
-      --slate-600: 71 85 105;
-      --slate-500: 100 116 139;
-      --slate-400: 148 163 184;
-      --slate-300: 203 213 225;
-      --slate-200: 226 232 240;
-      --slate-100: 241 245 249;
-      --white: 255 255 255;
-      --black: 0 0 0;
-
-      --blue-100: 219 234 254;
-      --blue-300: 147 197 253;
-      --blue-400: 96 165 250;
-      --blue-500: 59 130 246;
-      --blue-700: 29 78 216;
-
-      --emerald-300: 110 231 183;
-      --emerald-400: 52 211 153;
-      --emerald-500: 16 185 129;
-
-      --amber-300: 252 211 77;
-      --amber-400: 251 191 36;
-      --amber-500: 245 158 11;
-
-      color-scheme: dark;
-    }
-
-    body {
-      font-family: "Inter", sans-serif;
-      background-color: rgb(var(--slate-950));
-    }
-
-    /* Text and chips on the filled accent card stay light in both themes */
-    .on-accent { color: #fff; }
-    .chip-on-accent { background-color: rgba(255,255,255,0.2); }
-
-    .active-link {
-      color: rgb(var(--blue-400));
-      transform: scale(1.08) translateX(4px);
-    }
-    .active-link .nav-dot {
-      background-color: rgb(var(--blue-400));
-      box-shadow: 0 0 0 4px rgb(var(--blue-400) / 0.25);
-    }
-    .nav-link {
-      transition: color 0.2s ease, transform 0.2s ease;
-    }
-    .nav-dot {
-      transition: background-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    /* Scroll-reveal */
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
-    }
-    .reveal-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Timeline */
-    .timeline {
-      position: relative;
-      margin-left: 0.65rem;
-      border-left: 2px solid rgb(var(--slate-700));
-    }
-    .timeline-item {
-      position: relative;
-      padding-left: 2rem;
-      padding-bottom: 2rem;
-    }
-    .timeline-item:last-child {
-      padding-bottom: 0;
-    }
-    .timeline-dot {
-      position: absolute;
-      left: -9px;
-      top: 0.35rem;
-      width: 16px;
-      height: 16px;
-      border-radius: 9999px;
-      background: rgb(var(--blue-500));
-      border: 3px solid rgb(var(--slate-800));
-      box-shadow: 0 0 0 3px rgb(var(--slate-700));
-    }
-
-    .card-hover {
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-    .card-hover:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 28px -8px rgb(var(--blue-500) / 0.35);
-    }
-
-    .stat-number {
-      font-variant-numeric: tabular-nums;
-    }
-
-    /* News */
-    .news-item {
-      transition: background-color 0.2s ease;
-    }
-    .news-item:hover {
-      background-color: rgb(var(--blue-500) / 0.06);
-    }
-    .news-extra {
-      display: none;
-    }
-    .news-expanded .news-extra {
-      display: flex;
-    }
-    .pulse-dot {
-      position: relative;
-      width: 8px;
-      height: 8px;
-      border-radius: 9999px;
-      background: rgb(var(--emerald-400));
-    }
-    .pulse-dot::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 9999px;
-      background: rgb(var(--emerald-400));
-      animation: pulse-ring 1.8s ease-out infinite;
-    }
-    @keyframes pulse-ring {
-      0%   { transform: scale(1);   opacity: 0.7; }
-      100% { transform: scale(2.8); opacity: 0; }
-    }
-
-    /* Publication tabs */
-    .pub-tab {
-      padding: 0.4rem 1rem;
-      border-radius: 9999px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: rgb(var(--slate-400));
-      transition: background-color 0.2s ease, color 0.2s ease;
-    }
-    .pub-tab:hover {
-      color: rgb(var(--blue-400));
-    }
-    .pub-tab[aria-selected="true"] {
-      background-color: rgb(var(--blue-500) / 0.2);
-      color: rgb(var(--blue-300));
-    }
-    .pub-count {
-      margin-left: 0.25rem;
-      font-size: 0.75rem;
-      opacity: 0.7;
-    }
-
-    /* Hackathons */
-    .hack-card {
-      position: relative;
-      overflow: hidden;
-    }
-    .hack-card::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 3px;
-      background: linear-gradient(90deg, rgb(var(--amber-500)), rgb(var(--amber-400)), rgb(var(--amber-500)));
-    }
-    .hack-card:hover {
-      box-shadow: 0 12px 28px -8px rgb(var(--amber-500) / 0.35);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .pulse-dot::after { animation: none; }
-    }
-  </style>
+<meta charset="utf-8">
+<base href="Debaleena%20Portfolio.dc.html">
+<title>Debaleena Chakraborty | Portfolio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
 </head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">
+<script src="dp-data.js"></script>
+<script src="dp-viz.js"></script>
+<script src="dp-nav.js"></script>
+<style>
+body{margin:0;background:oklch(0.975 0.006 90);color:oklch(0.2 0.01 260);font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-underline-offset:3px}
+a:hover{color:oklch(0.55 0.14 50)}
+*{box-sizing:border-box}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+@keyframes ring{0%{transform:scale(.5);opacity:1}100%{transform:scale(2.4);opacity:0}}
+@keyframes scrollW{to{transform:translateX(var(--w))}}
+@keyframes timer164{from{stroke-dashoffset:164}to{stroke-dashoffset:0}}
+@keyframes proof{from{transform:scale(1,1)}to{transform:scale(1.2,2.7)}}
+@keyframes blinkC{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
 
-<body class="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-300">
-
-<!-- THEME TOGGLE -->
-<button id="theme-toggle" type="button" aria-label="Switch to dark mode"
-        class="fixed top-4 right-4 z-50 flex items-center gap-2 px-3 py-2 rounded-full bg-slate-800/90 backdrop-blur border border-slate-700 text-slate-300 hover:text-blue-400 shadow-lg shadow-black/10 transition">
-  <!-- Moon: shown in light mode -->
-  <svg class="h-5 w-5 dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-  </svg>
-  <!-- Sun: shown in dark mode -->
-  <svg class="h-5 w-5 hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-  </svg>
-  <span class="text-sm font-medium dark:hidden">Dark</span>
-  <span class="text-sm font-medium hidden dark:inline">Light</span>
-</button>
-
-<div class="container mx-auto px-4 sm:px-6 lg:px-8">
-<div class="md:flex">
-
-<!-- ================= SIDEBAR ================= -->
-<aside class="md:w-1/3 md:sticky top-0 md:h-screen md:overflow-y-auto p-8">
-  <div class="flex flex-col items-center md:items-start h-full text-center md:text-left">
-
-    <img
-      src="images/profile.jpg"
-      alt="Debaleena Chakraborty"
-      class="rounded-full w-32 h-32 mb-4 border-4 border-slate-800 shadow-lg ring-4 ring-blue-500/20"
-      onerror="this.onerror=null;this.src='https://placehold.co/128x128/1e293b/60a5fa?text=DC';"
-    />
-
-    <h1 class="text-3xl font-bold text-white">Debaleena Chakraborty</h1>
-    <p class="text-lg text-blue-400">PhD Student and Graduate Research Assistant</p>
-    <p class="text-sm text-slate-500">PROTON Lab, Arizona State University</p>
-
-    <!-- NAV -->
-    <nav class="my-10 w-full">
-      <ul class="space-y-4">
-        <li><a href="#news" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>News</a></li>
-        <li><a href="#about" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>About</a></li>
-        <li><a href="#education" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>Education</a></li>
-        <li><a href="#experience" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>Experience</a></li>
-        <li><a href="#publications" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>Publications</a></li>
-        <li><a href="#skills" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>Skills</a></li>
-        <li><a href="#projects" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>Projects</a></li>
-        <li><a href="#hackathons" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>Hackathons</a></li>
-        <li><a href="#awards" class="nav-link flex items-center gap-3 justify-center md:justify-start text-lg text-slate-400 hover:text-blue-400"><span class="nav-dot w-2 h-2 rounded-full bg-slate-600"></span>Awards</a></li>
-      </ul>
-    </nav>
-
-    <!-- CONTACT -->
-<div class="mt-auto w-full">
-  <h3 class="text-lg font-semibold text-slate-200 mb-4">Contact</h3>
-
-  <div class="space-y-4">
-    <!-- Email -->
-    <a
-      href="mailto:debaleena82001@gmail.com"
-      class="flex items-center gap-3 text-slate-400 hover:text-blue-400 transition justify-center md:justify-start"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-           viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 8h18a2 2 0 002-2V6a2 2 0 00-2-2H3a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-      </svg>
-      <span>Email</span>
-    </a>
-
-    <!-- GitHub -->
-    <a
-      href="https://github.com/debachaks"
-      target="_blank"
-      class="flex items-center gap-3 text-slate-400 hover:text-blue-400 transition justify-center md:justify-start"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-           viewBox="0 0 24 24" fill="currentColor">
-        <path fill-rule="evenodd"
-              d="M12 2C6.477 2 2 6.484 2 12.02c0 4.424 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.071 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.094.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.748-1.026 2.748-1.026.546 1.378.203 2.397.1 2.65.64.7 1.028 1.594 1.028 2.688 0 3.848-2.338 4.695-4.566 4.943.36.31.68.923.68 1.86 0 1.343-.012 2.427-.012 2.758 0 .268.18.58.688.482A10.02 10.02 0 0022 12.02C22 6.484 17.523 2 12 2z"
-              clip-rule="evenodd"/>
-      </svg>
-      <span>GitHub</span>
-    </a>
-  </div>
-</div>
-
-</aside>
-
-<!-- ================= MAIN CONTENT ================= -->
-<main class="md:w-2/3 p-4 md:p-12">
-
-<!-- NEWS -->
-<!-- To add an update: copy a news-item block to the top of the list and move the "New" badge to it.
-     Only the first 4 items show by default; give older ones the class "news-extra" so they stay hidden until "Show more". -->
-<section id="news" class="mb-16 scroll-mt-24">
-  <div class="reveal bg-slate-800/60 backdrop-blur border border-slate-700/60 p-8 rounded-2xl shadow-xl shadow-black/30">
-    <div class="flex items-center justify-between mb-2">
-      <h2 class="text-2xl font-bold text-white">News</h2>
-      <span class="flex items-center gap-2 text-xs text-emerald-300">
-        <span class="pulse-dot"></span>Latest updates
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div data-screen-label="Home" onMouseMove="{{ track }}" style="position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:clamp(96px,14vh,140px) clamp(20px,3vw,44px) clamp(28px,5vh,56px);gap:clamp(28px,5vh,56px)">
+    <div style="position:absolute;left:clamp(20px,3vw,44px);right:clamp(20px,3vw,44px);top:clamp(20px,3vw,32px);display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;animation:fadeUp .6s both">
+      <span style="display:flex;align-items:center;gap:12px">
+        <span style="width:44px;height:44px;border-radius:50%;padding:3px;background:conic-gradient(from 180deg,oklch(0.45 0.15 255) 0 50%,oklch(0.55 0.14 50) 50% 100%)"><img src="https://debachaks.github.io/portfolio/images/profile.jpg" alt="Debaleena Chakraborty" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;border:2px solid oklch(0.975 0.006 90)"></span>
+        Debaleena Chakraborty · PROTON Lab, ASU
       </span>
-    </div>
-    <div class="h-px bg-slate-700 mb-4"></div>
-
-    <ul id="news-list" class="divide-y divide-slate-700/60">
-      <li class="news-item flex gap-4 py-3 px-2 rounded-lg">
-        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">Sep 2026</span>
-        <p class="text-sm text-slate-300">
-          <span class="mr-1">🥈</span>Won <strong class="text-slate-100">2nd place</strong> at the <a href="#hackathons" class="text-slate-100 font-semibold underline decoration-blue-500/50 hover:text-blue-300">AI Investment Spark Challenge</a> (TIAA × ASU × AWS) with <em>FundSentinel</em>, a 14-agent AI fund-approval committee.
-          <span class="ml-1 text-[10px] font-bold uppercase tracking-wide bg-emerald-500/15 text-emerald-300 px-1.5 py-0.5 rounded">New</span>
-        </p>
-      </li>
-      <li class="news-item flex gap-4 py-3 px-2 rounded-lg">
-        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">Sep 2026</span>
-        <p class="text-sm text-slate-300">
-          <span class="mr-1">🎤</span>Presented our paper on <em>zero-label anomaly detection and forensic attribution for RISC-V devices</em> at <strong class="text-slate-100">IEEE CAMAD 2026</strong>.
-        </p>
-      </li>
-      <li class="news-item flex gap-4 py-3 px-2 rounded-lg">
-        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">Aug 2026</span>
-        <p class="text-sm text-slate-300">
-          <span class="mr-1">🎓</span>Started my <strong class="text-slate-100">Ph.D. in Computer Engineering</strong> at Arizona State University.
-        </p>
-      </li>
-      <li class="news-item flex gap-4 py-3 px-2 rounded-lg">
-        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">May 2026</span>
-        <p class="text-sm text-slate-300">
-          <span class="mr-1">🎓</span>Completed my <strong class="text-slate-100">M.S. in Computer Engineering</strong> at ASU with a 4.0 GPA.
-        </p>
-      </li>
-      <li class="news-item news-extra gap-4 py-3 px-2 rounded-lg">
-        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">May 2026</span>
-        <p class="text-sm text-slate-300">
-          <span class="mr-1">🎤</span>Presented our paper on <em>game-theoretic over-the-air computation for crowdsensing</em> at <strong class="text-slate-100">IEEE ICC 2026</strong>.
-        </p>
-      </li>
-      <li class="news-item news-extra gap-4 py-3 px-2 rounded-lg">
-        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">Apr 2026</span>
-        <p class="text-sm text-slate-300">
-          <span class="mr-1">📄</span>Paper accepted at <strong class="text-slate-100">IEEE CAMAD 2026</strong>.
-        </p>
-      </li>
-      <li class="news-item news-extra gap-4 py-3 px-2 rounded-lg">
-        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">Jan 2026</span>
-        <p class="text-sm text-slate-300">
-          <span class="mr-1">📄</span>Paper accepted at <strong class="text-slate-100">IEEE ICC 2026</strong>.
-        </p>
-      </li>
-      <li class="news-item news-extra gap-4 py-3 px-2 rounded-lg">
-        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">Sep 2025</span>
-        <p class="text-sm text-slate-300">
-          <span class="mr-1">🏆</span>Received the <strong class="text-slate-100">Herbold Graduate Engineering Scholarship</strong>.
-        </p>
-      </li>
-      <li class="news-item news-extra gap-4 py-3 px-2 rounded-lg">
-        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">May 2025</span>
-        <p class="text-sm text-slate-300">
-          <span class="mr-1">🔬</span>Joined the <strong class="text-slate-100">PROTON Lab</strong> at ASU as a Graduate Research Associate.
-        </p>
-      </li>
-      <li class="news-item news-extra gap-4 py-3 px-2 rounded-lg">
-        <span class="w-20 shrink-0 text-sm font-semibold text-blue-400 tabular-nums">Aug 2024</span>
-        <p class="text-sm text-slate-300">
-          <span class="mr-1">🏆</span>Awarded the <strong class="text-slate-100">Engineering Graduate Fellowship</strong> by the Ira A. Fulton Schools of Engineering.
-        </p>
-      </li>
-    </ul>
-
-    <button id="news-toggle" type="button"
-            class="mt-4 text-sm font-medium text-blue-400 hover:text-blue-300 transition">
-      Show more ↓
-    </button>
-  </div>
-</section>
-
-
-<!-- ABOUT -->
-<section id="about" class="mb-16 scroll-mt-24">
-  <div class="reveal bg-slate-800/60 backdrop-blur border border-slate-700/60 p-8 rounded-2xl shadow-xl shadow-black/30">
-
-    <!-- Title -->
-    <h2 class="text-3xl font-bold mb-2 text-white">About</h2>
-    <div class="h-1 w-full bg-gradient-to-r from-blue-500 via-blue-500/30 to-transparent rounded-full mb-6"></div>
-
-    <!-- Bio -->
-    <p class="text-slate-300 leading-relaxed text-lg mb-6">
-      I'm a PhD student in Computer Engineering at Arizona State University, advised by
-      <a href="https://sites.google.com/view/eirini-eleni-tsiropoulou/home?authuser=0" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300">Dr. Eirini Eleni Tsiropoulou</a>
-      in the <span class="text-blue-400 font-semibold">PROTON Lab</span>.
-      My PhD research, in collaboration with
-      <a href="https://www.sandia.gov" target="_blank" rel="noopener" class="text-blue-400 font-semibold hover:text-blue-300">Sandia National Laboratories</a>,
-      focuses on hardware security, fault analysis and survivable electronics.
-      I also contribute to
-      <a href="https://sites.google.com/view/factory-ai/home" target="_blank" rel="noopener" class="text-blue-400 font-semibold hover:text-blue-300">FACTORY-AI</a>,
-      an NSF-funded project on AI-native industrial IoT networks for smart manufacturing.
-    </p>
-
-    <!-- Interests -->
-    <div class="flex flex-wrap gap-3 mb-8">
-      <span class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-medium">Hardware Security</span>
-      <span class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-medium">Fault Analysis</span>
-      <span class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-medium">Survivable Electronics</span>
-      <span class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm font-medium">Machine Learning</span>
-      <span class="px-4 py-1.5 rounded-full bg-slate-700/40 border border-slate-600/50 text-slate-400 text-sm font-medium">Industrial IoT Networks</span>
+      <span style="display:flex;gap:18px"><a href="mailto:debaleena82001@gmail.com">email</a><a href="https://github.com/debachaks">github</a></span>
     </div>
 
-    <!-- Stats -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="text-center bg-blue-500/10 border border-blue-500/10 rounded-xl py-5 px-2">
-        <p class="stat-number text-3xl font-extrabold text-blue-400" data-count="4.0" data-decimals="1">0.0</p>
-        <p class="text-xs uppercase tracking-wide text-slate-500 mt-1">GPA</p>
-      </div>
-      <div class="text-center bg-blue-500/10 border border-blue-500/10 rounded-xl py-5 px-2">
-        <p class="stat-number text-3xl font-extrabold text-blue-400" data-count="6">0</p>
-        <p class="text-xs uppercase tracking-wide text-slate-500 mt-1">Publications</p>
-      </div>
-      <div class="text-center bg-blue-500/10 border border-blue-500/10 rounded-xl py-5 px-2">
-        <p class="stat-number text-3xl font-extrabold text-blue-400" data-count="4">0</p>
-        <p class="text-xs uppercase tracking-wide text-slate-500 mt-1">Years in Research</p>
-      </div>
-      <div class="text-center bg-blue-500/10 border border-blue-500/10 rounded-xl py-5 px-2">
-        <p class="stat-number text-3xl font-extrabold text-blue-400" data-count="3">0</p>
-        <p class="text-xs uppercase tracking-wide text-slate-500 mt-1">Awards</p>
-      </div>
+    <div style="display:flex;flex-direction:column;gap:18px;animation:fadeUp .8s .1s both">
+      <h1 style="margin:0;font-weight:400;font-size:clamp(52px,7.4vw,124px);line-height:1.04;letter-spacing:-.01em"><span style="display:block;font-family:'Instrument Serif',serif;margin-bottom:.08em">Welcome in.</span><span style="font-family:'Source Serif 4',serif;font-weight:600;font-size:.8em;color:oklch(0.45 0.15 255)">Pick a door</span><span style="font-family:'Instrument Serif',serif">, </span><em style="font-family:'Instrument Serif',serif;color:oklch(0.55 0.14 50)">any door.</em></h1>
+      <p style="margin:0;max-width:52ch;font-size:18px;line-height:1.55;opacity:.8">Two ways into Debaleena Chakraborty’s work: her research written up as a paper, or the same career baked into a game.</p>
     </div>
 
-  </div>
-</section>
-
-
-<!-- EDUCATION -->
-<section id="education" class="mb-16 scroll-mt-24">
-  <div class="reveal bg-slate-800/60 backdrop-blur border border-slate-700/60 p-8 rounded-2xl shadow-xl shadow-black/30">
-    <h2 class="text-2xl font-bold mb-2 text-white">Education</h2>
-    <div class="h-px bg-slate-700 mb-8"></div>
-
-    <div class="timeline">
-      <div class="timeline-item">
-        <span class="timeline-dot"></span>
-        <h3 class="text-lg font-semibold text-slate-100">Ph.D. in Computer Engineering</h3>
-        <p class="text-sm text-slate-400">Arizona State University</p>
-        <p class="text-sm text-slate-500">Aug 2026 – May 2029 (Expected) · Tempe, USA</p>
-      </div>
-
-      <div class="timeline-item">
-        <span class="timeline-dot"></span>
-        <h3 class="text-lg font-semibold text-slate-100">M.S. in Computer Engineering</h3>
-        <p class="text-sm text-slate-400">Arizona State University</p>
-        <p class="text-sm text-slate-500">Aug 2024 – May 2026 · Tempe, USA</p>
-        <p class="text-sm text-blue-400 font-medium">GPA: 4.0 / 4.0</p>
-      </div>
-
-      <div class="timeline-item">
-        <span class="timeline-dot"></span>
-        <h3 class="text-lg font-semibold text-slate-100">B.Tech in Electronics &amp; Communication Engineering</h3>
-        <p class="text-sm text-slate-400">IIIT Guwahati</p>
-        <p class="text-sm text-slate-500">Aug 2019 – Jul 2023 · Guwahati, India</p>
-        <p class="text-sm text-blue-400 font-medium">GPA: 8.66 / 10</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- EXPERIENCE -->
-<section id="experience" class="mb-16 scroll-mt-24">
-  <div class="reveal bg-slate-800/60 backdrop-blur border border-slate-700/60 p-8 rounded-2xl shadow-xl shadow-black/30">
-    <h2 class="text-2xl font-bold mb-2 text-white">Experience</h2>
-    <div class="h-px bg-slate-700 mb-8"></div>
-
-    <div class="timeline">
-
-      <div class="timeline-item">
-        <span class="timeline-dot"></span>
-        <h3 class="text-lg font-semibold text-slate-100">
-          Graduate Research Associate – PROTON Lab, Arizona State University
-        </h3>
-        <p class="text-sm text-slate-500">May 2025 – Present</p>
-        <p class="text-sm font-semibold text-slate-300 mt-3">PhD</p>
-        <ul class="list-disc ml-5 mt-2 text-sm text-slate-400 space-y-1">
-          <li>Studying fault detection and diagnosis in microprocessors by analyzing hardware performance counters and register-level telemetry, applying statistical and machine learning techniques to identify and characterize fault-induced attacks.</li>
-          <li>Developed a zero-label anomaly detection and forensic attribution framework using contrastive learning to identify fault-injected and adversarial behavior in RISC-V embedded processors.</li>
-          <li>Designed a windowed-difference, multi-detector consensus methodology for false-alarm suppression in noisy time-series hardware telemetry, generalizable to anomaly detection problems beyond hardware security.</li>
-        </ul>
-        <p class="text-sm font-semibold text-slate-300 mt-3">MS</p>
-        <ul class="list-disc ml-5 mt-2 text-sm text-slate-400 space-y-1">
-          <li>Conducting thesis research on Over-the-Air Computation using game theory to optimize distributed signal processing in wireless edge networks.</li>
-          <li>Developing Python-based simulations for power control and resource allocation, enabling efficient multi-user coordination under dynamic channel conditions.</li>
-        </ul>
-      </div>
-
-      <div class="timeline-item">
-        <span class="timeline-dot"></span>
-        <h3 class="text-lg font-semibold text-slate-100">Data Engineer – ZS Associates</h3>
-        <p class="text-sm text-slate-500">Sep 2023 – Jun 2024 · India</p>
-        <ul class="list-disc ml-5 mt-2 text-sm text-slate-400 space-y-1">
-          <li>Built SQL-driven workflows and Excel-based analytics for medical sales data.</li>
-          <li>Optimized ETL pipelines, improving execution time by 30%.</li>
-          <li>Designed quality-check frameworks reducing SQL database error rates by 25%.</li>
-        </ul>
-      </div>
-
-      <div class="timeline-item">
-        <span class="timeline-dot"></span>
-        <h3 class="text-lg font-semibold text-slate-100">Summer Research Fellow – IISc Bangalore</h3>
-        <p class="text-sm text-slate-500">May 2022 – Jul 2022</p>
-        <ul class="list-disc ml-5 mt-2 text-sm text-slate-400 space-y-1">
-          <li>Analyzed EEG signals using time-frequency decomposition and Matching Pursuit algorithm.</li>
-          <li>Developed MATLAB pipelines for preprocessing and visualization of biomedical signals.</li>
-        </ul>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- PUBLICATIONS -->
-<section id="publications" class="mb-16 scroll-mt-24">
-  <div class="reveal bg-slate-800/60 backdrop-blur border border-slate-700/60 p-8 rounded-2xl shadow-xl shadow-black/30">
-    <h2 class="text-2xl font-bold mb-2 text-white">Publications</h2>
-    <div class="h-px bg-slate-700 mb-6"></div>
-
-    <!-- Tabs: counts are filled in by the script below -->
-    <div role="tablist" aria-label="Publications" class="inline-flex gap-1 p-1 mb-6 rounded-full bg-slate-900/60 border border-slate-700">
-      <button type="button" role="tab" class="pub-tab" data-panel="pubs-published" aria-selected="true">
-        Published <span class="pub-count"></span>
+    <div style="display:flex;flex-direction:column;border-top:2px solid oklch(0.2 0.01 260)">
+      <button onClick="{{ openLab }}" onMouseEnter="{{ hoverLab }}" onMouseLeave="{{ hoverNone }}" style="position:relative;display:grid;grid-template-columns:70px minmax(0,1fr) auto;gap:24px;align-items:center;padding:clamp(18px,2.6vw,34px) 10px;border:0;border-bottom:2px solid oklch(0.2 0.01 260);cursor:pointer;text-align:left;color:{{ labFg }};background:{{ labBg }};background-image:{{ labLines }};transition:background-color .35s,color .35s;animation:fadeUp .8s .35s both">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:14px">01</span>
+        <span style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'Source Serif 4',serif;font-weight:600;font-size:clamp(44px,6.4vw,108px);line-height:.92;transform:translateX({{ labShift }});transition:transform .5s cubic-bezier(.2,.7,.2,1)">The Lab</span><span style="font-family:'Source Serif 4',serif;font-size:16px;opacity:.8">Academic · her research as a paper, with scrolling figures and nine publications</span></span>
+        <span style="font-family:'Material Symbols Rounded';font-size:clamp(36px,4vw,60px);transform:rotate({{ labRot }});transition:transform .5s">arrow_outward</span>
       </button>
-      <button type="button" role="tab" class="pub-tab" data-panel="pubs-review" aria-selected="false">
-        Under Review <span class="pub-count"></span>
+      <button onClick="{{ openKitchen }}" onMouseEnter="{{ hoverKitchen }}" onMouseLeave="{{ hoverNone }}" style="position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) 70px;gap:24px;align-items:center;padding:clamp(18px,2.6vw,34px) 10px;border:0;border-bottom:2px solid oklch(0.2 0.01 260);cursor:pointer;text-align:right;color:{{ kitFg }};background:{{ kitBg }};background-image:{{ kitCheck }};background-size:56px 56px;background-position:0 0,28px 28px;transition:background-color .35s,color .35s;animation:fadeUp .8s .5s both">
+        <span style="font-family:'Material Symbols Rounded';font-size:clamp(36px,4vw,60px);transform:rotate({{ kitRot }});transition:transform .5s">arrow_insert</span>
+        <span style="display:flex;flex-direction:column;gap:6px;align-items:flex-end"><span style="font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(48px,7vw,118px);line-height:.9;transform:translateX({{ kitShift }});transition:transform .5s cubic-bezier(.2,.7,.2,1)">The Kitchen</span><span style="font-size:16px;opacity:.8">Baking · the same career as a game: pantry, mix, oven, bake-off</span></span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:14px">02</span>
       </button>
     </div>
 
-    <div id="pubs-review" role="tabpanel" class="space-y-4" hidden>
-      <div class="card-hover border-l-4 border-dashed border-slate-500 border-t border-r border-b border-slate-700 rounded-xl p-5 bg-slate-900/50">
-        <h3 class="font-semibold text-slate-100">
-          Reliable Anomaly Detection for GPS-Dependent Networked Systems via Unsupervised Fusion of Hardware Performance Counters
-          <span class="ml-2 text-xs bg-amber-500/15 text-amber-300 px-2 py-0.5 rounded-full whitespace-nowrap">Under review</span>
-        </h3>
-        <p class="text-sm text-slate-400 mt-1">
-          <strong class="text-slate-200">D. Chakraborty</strong>, A. Hati, J. Plusquellic, K. Chakrabarty, T. J. Mannos, E. E. Tsiropoulou
-        </p>
-        <p class="text-sm italic text-slate-500">Submitted to IEEE ICC 2027</p>
+    <sc-if value="{{ showPreview }}">
+      <div style="position:fixed;left:{{ px }};top:{{ py }};width:min(360px,38vw);pointer-events:none;z-index:10;transform:translate({{ offX }},-110%) rotate({{ tilt }});transition:transform .2s;border-radius:12px;box-shadow:0 30px 60px -20px oklch(0 0 0 / 0.45);background:oklch(0.99 0.003 90);padding:12px;display:flex;flex-direction:column;gap:8px;border:2px solid {{ previewBorder }}">
+        <div style="aspect-ratio:{{ previewRatio }};border-radius:6px;overflow:hidden;background:{{ previewInner }};padding:6px">{{ previewViz }}</div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px">{{ previewCap }}</span>
       </div>
-
-      <div class="card-hover border-l-4 border-dashed border-slate-500 border-t border-r border-b border-slate-700 rounded-xl p-5 bg-slate-900/50">
-        <h3 class="font-semibold text-slate-100">
-          Semantic-Aware WiFi Data Collection for Smart Manufacturing with AI-Driven Edge Intelligence
-          <span class="ml-2 text-xs bg-amber-500/15 text-amber-300 px-2 py-0.5 rounded-full whitespace-nowrap">Under review</span>
-        </h3>
-        <p class="text-sm text-slate-400 mt-1">
-          S. H. Nimmagadda, <strong class="text-slate-200">D. Chakraborty</strong>, P. Sharma, K. Chakrabarty, E. E. Tsiropoulou
-        </p>
-        <p class="text-sm italic text-slate-500">Submitted to IEEE ICC 2027</p>
-      </div>
-
-      <div class="card-hover border-l-4 border-dashed border-slate-500 border-t border-r border-b border-slate-700 rounded-xl p-5 bg-slate-900/50">
-        <h3 class="font-semibold text-slate-100">
-          A Game-Theoretic Approach to Distributed Power Control in Over-the-Air Computation Wireless Systems
-          <span class="ml-2 text-xs bg-amber-500/15 text-amber-300 px-2 py-0.5 rounded-full whitespace-nowrap">Under review</span>
-        </h3>
-        <p class="text-sm text-slate-400 mt-1">
-          <strong class="text-slate-200">D. Chakraborty</strong>, A. Sabyrbek, E. E. Tsiropoulou
-        </p>
-        <p class="text-sm italic text-slate-500">Submitted to IEEE Transactions on Green Communications and Networking</p>
-      </div>
-    </div>
-
-    <div id="pubs-published" role="tabpanel" class="space-y-4">
-      <div class="card-hover border-l-4 border-l-blue-400 border-t border-r border-b border-blue-500/40 rounded-xl p-5 bg-blue-500/20">
-        <h3 class="font-semibold text-slate-100">
-          Zero-Label Anomaly Detection and Forensic Attribution for RISC-V Embedded Devices via Contrastive Learning
-          <span class="ml-2 text-xs bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">2026</span>
-        </h3>
-        <p class="text-sm text-slate-400 mt-1">
-          <strong class="text-slate-200">D. Chakraborty</strong>, A. Hati, J. Plusquellic, K. Chakrabarty, T. J. Mannos, E. E. Tsiropoulou
-        </p>
-        <p class="text-sm italic text-slate-500">
-          IEEE CAMAD
-        </p>
-      </div>
-
-      <div class="card-hover border-l-4 border-l-blue-400 border-t border-r border-b border-blue-500/40 rounded-xl p-5 bg-blue-500/20">
-        <h3 class="font-semibold text-slate-100">
-          Game-Theoretic Over-the-Air Computation for Socially Coupled Crowdsensing Systems
-          <span class="ml-2 text-xs bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">2026</span>
-        </h3>
-        <p class="text-sm text-slate-400 mt-1">
-          A. Sabyrbek, <strong class="text-slate-200">D. Chakraborty</strong>, E. E. Tsiropoulou
-        </p>
-        <p class="text-sm italic text-slate-500">
-          IEEE ICC
-        </p>
-      </div>
-
-      <div class="card-hover border-l-4 border-l-blue-400 border-t border-r border-b border-blue-500/40 rounded-xl p-5 bg-blue-500/20">
-        <h3 class="font-semibold text-slate-100">
-          Attention-based Deep Learning for Epileptic Seizure Type Detection
-          <span class="ml-2 text-xs bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">2024</span>
-        </h3>
-        <p class="text-sm text-slate-400 mt-1">
-          A. Shankar, <strong class="text-slate-200">D. Chakraborty</strong>, et al.
-        </p>
-        <p class="text-sm italic text-slate-500">ASSIC</p>
-      </div>
-
-      <div class="card-hover border-l-4 border-l-blue-400 border-t border-r border-b border-blue-500/40 rounded-xl p-5 bg-blue-500/20">
-        <h3 class="font-semibold text-slate-100">
-          Seizure Type Detection Using EEG Signals Based on Phase Synchronization and Deep Learning
-          <span class="ml-2 text-xs bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">2023</span>
-        </h3>
-        <p class="text-sm text-slate-400 mt-1">
-          A. Shankar, <strong class="text-slate-200">D. Chakraborty</strong>, et al.
-        </p>
-        <p class="text-sm italic text-slate-500">IEEE BSN</p>
-      </div>
-
-      <div class="card-hover border-l-4 border-l-blue-400 border-t border-r border-b border-blue-500/40 rounded-xl p-5 bg-blue-500/20">
-        <h3 class="font-semibold text-slate-100">
-          Long Short-Term Memory Framework for Seizure Type Classification Using EEG Signals
-          <span class="ml-2 text-xs bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">2023</span>
-        </h3>
-        <p class="text-sm text-slate-400 mt-1">
-          A. Shankar, <strong class="text-slate-200">D. Chakraborty</strong>, et al.
-        </p>
-        <p class="text-sm italic text-slate-500">IEEE SPMB</p>
-      </div>
-
-      <div class="card-hover border-l-4 border-l-blue-400 border-t border-r border-b border-blue-500/40 rounded-xl p-5 bg-blue-500/20">
-        <h3 class="font-semibold text-slate-100">
-          Efficient Hardware Implementation of Cube Architecture using Yavadunam Sutra on FPGA
-          <span class="ml-2 text-xs bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">2021</span>
-        </h3>
-        <p class="text-sm text-slate-400 mt-1">
-          M. Thakare, P. Yash, <strong class="text-slate-200">D. Chakraborty</strong>, B. Jajodia
-        </p>
-        <p class="text-sm italic text-slate-500">IEEE MWSCAS</p>
-      </div>
-    </div>
+    </sc-if>
   </div>
-</section>
+</sc-if>
 
-
-<!-- SKILLS -->
-<section id="skills" class="mb-16 scroll-mt-24">
-  <div class="reveal bg-slate-800/60 backdrop-blur border border-slate-700/60 p-8 rounded-2xl shadow-xl shadow-black/30">
-    <h2 class="text-2xl font-bold mb-2 text-white">Skills</h2>
-    <div class="h-px bg-slate-700 mb-6"></div>
-
-    <div class="grid grid-cols-2 md:grid-cols-4 md:grid-rows-2 gap-4">
-      <div class="card-hover col-span-2 row-span-2 bg-gradient-to-br from-blue-700 to-blue-500 on-accent rounded-2xl p-6 flex flex-col justify-between">
-        <div>
-          <h4 class="text-lg font-semibold mb-1">Machine Learning &amp; Deep Learning</h4>
-          <p class="text-sm on-accent opacity-80">Core modeling &amp; experimentation stack</p>
-        </div>
-        <div class="flex flex-wrap gap-2 mt-4">
-          <span class="chip-on-accent px-3 py-1 rounded-full text-sm">TensorFlow</span>
-          <span class="chip-on-accent px-3 py-1 rounded-full text-sm">PyTorch</span>
-          <span class="chip-on-accent px-3 py-1 rounded-full text-sm">MLflow</span>
-        </div>
-      </div>
-
-      <div class="card-hover col-span-2 bg-slate-900/50 border border-slate-700 rounded-2xl p-6 flex flex-col justify-between">
-        <h4 class="font-semibold text-slate-100 mb-1">Languages &amp; Data</h4>
-        <div class="flex flex-wrap gap-2 mt-2">
-          <span class="bg-slate-700/70 px-3 py-1 rounded-full text-sm text-slate-200">Python</span>
-          <span class="bg-slate-700/70 px-3 py-1 rounded-full text-sm text-slate-200">SQL</span>
-        </div>
-      </div>
-
-      <div class="card-hover bg-slate-900/50 border border-slate-700 rounded-2xl p-6 flex flex-col justify-between">
-        <h4 class="font-semibold text-slate-100 mb-1">Cloud &amp; DevOps</h4>
-        <div class="flex flex-wrap gap-2 mt-2">
-          <span class="bg-slate-700/70 px-3 py-1 rounded-full text-sm text-slate-200">AWS</span>
-          <span class="bg-slate-700/70 px-3 py-1 rounded-full text-sm text-slate-200">Docker</span>
-        </div>
-      </div>
-
-      <div class="card-hover bg-slate-900/50 border border-slate-700 rounded-2xl p-6 flex flex-col justify-between">
-        <h4 class="font-semibold text-slate-100 mb-1">Domain Expertise</h4>
-        <div class="flex flex-wrap gap-2 mt-2">
-          <span class="bg-slate-700/70 px-3 py-1 rounded-full text-sm text-slate-200">Signal Processing</span>
-        </div>
-      </div>
-    </div>
+<sc-if value="{{ isLab }}"><dc-import name="AcademicMode" on-home="{{ goHome }}" hint-size="100%,100vh"></dc-import></sc-if>
+<sc-if value="{{ isKitchen }}"><dc-import name="BakingMode" on-home="{{ goHome }}" hint-size="100%,100vh"></dc-import></sc-if>
+<sc-if value="{{ showDock }}">
+  <div style="position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:60;display:flex;gap:3px;padding:4px;border-radius:999px;background:oklch(0.2 0.01 260 / 0.92);backdrop-filter:blur(10px);box-shadow:0 12px 30px -12px oklch(0 0 0 / 0.5)">
+    <sc-for list="{{ dock }}" as="d" hint-placeholder-count="3"><button onClick="{{ d.go }}" style="display:flex;align-items:center;gap:6px;border:0;cursor:pointer;padding:7px 13px;border-radius:999px;background:{{ d.bg }};color:oklch(0.97 0.01 90);font-family:'JetBrains Mono',monospace;font-size:12px"><span style="font-family:'Material Symbols Rounded';font-size:17px">{{ d.icon }}</span>{{ d.label }}</button></sc-for>
   </div>
-</section>
-
-<!-- PROJECTS -->
-<section id="projects" class="mb-16 scroll-mt-24">
-  <div class="reveal bg-slate-800/60 backdrop-blur border border-slate-700/60 p-8 rounded-2xl shadow-xl shadow-black/30">
-    <h2 class="text-2xl font-bold mb-2 text-white">Projects</h2>
-    <div class="h-px bg-slate-700 mb-6"></div>
-
-    <div class="space-y-4">
-      <div class="card-hover border border-slate-700 rounded-xl p-5 bg-slate-900/50">
-        <h3 class="font-semibold text-slate-100">End-to-End MLOps Pipeline – YouTube Sentiment Analysis</h3>
-        <div class="flex flex-wrap gap-2 mt-2 mb-2">
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Python</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">AWS</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">NLP</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Docker</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">MLflow</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">DVC</span>
-        </div>
-        <p class="text-sm text-slate-400">
-          Built a full MLOps pipeline integrating YouTube API, custom NLP models, and experiment tracking,
-          reducing manual workflow time by ~60%.
-        </p>
-      </div>
-
-      <div class="card-hover border border-slate-700 rounded-xl p-5 bg-slate-900/50">
-        <h3 class="font-semibold text-slate-100">Smart Task Prioritizer (LLM-Based Agent)</h3>
-        <div class="flex flex-wrap gap-2 mt-2 mb-2">
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Python</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Streamlit</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">LangChain</span>
-        </div>
-        <p class="text-sm text-slate-400">
-          Designed an LLM-powered productivity agent with real-time reasoning and interactive dashboards.
-        </p>
-      </div>
-
-      <div class="card-hover border border-slate-700 rounded-xl p-5 bg-slate-900/50">
-        <h3 class="font-semibold text-slate-100">Seizure Type Classification using Deep Learning</h3>
-        <div class="flex flex-wrap gap-2 mt-2 mb-2">
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">TensorFlow</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">CNN</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">LSTM</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Signal Processing</span>
-        </div>
-        <p class="text-sm text-slate-400">
-          Developed EEG-based seizure classification models achieving up to 98% accuracy.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- HACKATHONS -->
-<!-- To add another win: copy the hack-card block. Use md:grid-cols-2 on the grid once there are two or more cards. -->
-<section id="hackathons" class="mb-16 scroll-mt-24">
-  <div class="reveal bg-slate-800/60 backdrop-blur border border-slate-700/60 p-8 rounded-2xl shadow-xl shadow-black/30">
-    <h2 class="text-2xl font-bold mb-2 text-white">Hackathon Wins</h2>
-    <div class="h-px bg-slate-700 mb-6"></div>
-
-    <div class="grid grid-cols-1 gap-4">
-      <div class="hack-card card-hover border border-slate-700 rounded-xl p-6 bg-slate-900/50 flex flex-col">
-        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-          <span class="text-xs font-bold uppercase tracking-wide bg-slate-400/15 text-slate-200 border border-slate-400/30 px-2.5 py-1 rounded-full">🥈 2nd Place</span>
-          <span class="text-xs text-slate-500">Sep 2026 · Team Vitality</span>
-        </div>
-        <h3 class="font-semibold text-slate-100">AI Investment Spark Challenge</h3>
-        <p class="text-xs text-slate-500 mb-3">TIAA · ASU W. P. Carey School of Business · AWS</p>
-        <p class="text-lg font-semibold text-blue-300">FundSentinel</p>
-        <p class="text-sm text-slate-400 mb-4">
-          An AI approval committee for investment funds that routes itself and proves every decision.
-          A five-agent data team profiles, cleans and documents any fund file with no setup. A seven-agent
-          committee then reviews each fund: a Supervisor routes the work to four specialist reviewers,
-          an Evidence checker demands proof, and a Decision owner rules. AI makes the judgements, while code
-          does the maths, enforces hard rules and verifies every claim against the source data.
-        </p>
-
-        <div class="flex flex-wrap gap-2 mb-4">
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Multi-Agent Systems</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Claude on Bedrock</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Bedrock AgentCore</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Strands Agents</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Amplify</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">S3</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">Aurora</span>
-          <span class="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full">CloudFormation</span>
-        </div>
-
-        <div class="mt-auto flex gap-4 text-sm">
-          <a href="https://asuevents.asu.edu/event/ai-investment-spark-challenge" target="_blank" rel="noopener" class="text-slate-400 hover:text-amber-300 transition">Event ↗</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- AWARDS -->
-<section id="awards" class="mb-16 scroll-mt-24">
-  <div class="reveal bg-slate-800/60 backdrop-blur border border-slate-700/60 p-8 rounded-2xl shadow-xl shadow-black/30">
-    <h2 class="text-2xl font-bold mb-2 text-white">Awards</h2>
-    <div class="h-px bg-slate-700 mb-6"></div>
-
-    <div class="space-y-4">
-      <div class="card-hover flex items-start gap-4 border border-slate-700 rounded-xl p-5 bg-slate-900/50">
-        <span class="text-2xl">🏆</span>
-        <div>
-          <h3 class="font-semibold text-slate-100">
-            Herbold Graduate Engineering Scholarship
-            <span class="ml-2 text-xs bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full">Sep 2025</span>
-          </h3>
-          <p class="text-sm text-slate-400">
-            Awarded to high-achieving graduate students (GPA ≥ 3.5) with research interests in computer science and engineering.
-          </p>
-        </div>
-      </div>
-
-      <div class="card-hover flex items-start gap-4 border border-slate-700 rounded-xl p-5 bg-slate-900/50">
-        <span class="text-2xl">🎓</span>
-        <div>
-          <h3 class="font-semibold text-slate-100">
-            Engineering Graduate Fellowship
-            <span class="ml-2 text-xs bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full">Aug 2024</span>
-          </h3>
-          <p class="text-sm text-slate-400">
-            Competitive fellowship awarded by the Ira A. Fulton Schools of Engineering.
-          </p>
-        </div>
-      </div>
-
-      <div class="card-hover flex items-start gap-4 border border-slate-700 rounded-xl p-5 bg-slate-900/50">
-        <span class="text-2xl">🔬</span>
-        <div>
-          <h3 class="font-semibold text-slate-100">
-            Google Research Week – Computer Vision Track
-            <span class="ml-2 text-xs bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full">Jan 2023</span>
-          </h3>
-          <p class="text-sm text-slate-400">
-            Selected among 50 students nationwide for an intensive research program by Google Research India.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-</main>
-</div>
-</div>
-
-<!-- SCROLL SPY + REVEAL + COUNTERS -->
-<script>
-const sections = document.querySelectorAll("section");
-const navLinks = document.querySelectorAll(".nav-link");
-
-const spyObserver = new IntersectionObserver(
-  entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        navLinks.forEach(link => {
-          link.classList.toggle(
-            "active-link",
-            link.getAttribute("href").substring(1) === entry.target.id
-          );
-        });
-      }
-    });
-  },
-  { threshold: 0.4 }
-);
-sections.forEach(section => spyObserver.observe(section));
-
-// Scroll-reveal for cards
-const revealEls = document.querySelectorAll(".reveal");
-const revealObserver = new IntersectionObserver(
-  entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("reveal-visible");
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.1 }
-);
-revealEls.forEach(el => revealObserver.observe(el));
-
-// Animated stat counters
-function animateCount(el) {
-  const target = parseFloat(el.dataset.count);
-  const decimals = parseInt(el.dataset.decimals || "0", 10);
-  const duration = 1200;
-  const start = performance.now();
-
-  function step(now) {
-    const progress = Math.min((now - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const value = target * eased;
-    el.textContent = value.toFixed(decimals);
-    if (progress < 1) requestAnimationFrame(step);
+</sc-if>
+<div ref="{{ wipeRef }}" style="position:fixed;inset:0;z-index:100;pointer-events:none;clip-path:circle(0% at 50% 50%);background:{{ wipeBg }};display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:80px;color:oklch(0.99 0.01 90)">{{ wipeIcon }}</span></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { view: 'home', to: 'lab', hov: null, x: 0, y: 0, vx: 0, fault: 0, proof: 1 };
+  wipeRef = React.createRef();
+  componentDidMount() {
+    const wait = () => { if (window.makeViz && window.DPData && window.dpShellVals) { this.V = window.makeViz(React); this.D = window.DPData; this.forceUpdate(); } else setTimeout(wait, 60); };
+    wait();
+    const h = (location.hash || '').slice(1); if (h === 'lab' || h === 'kitchen') this.setState({ view: h });
+    this.loop = setInterval(() => { if (this.state.hov) this.setState(s => ({ fault: s.fault + 1, proof: s.proof + 1 })); }, 3000);
   }
-  requestAnimationFrame(step);
-}
-
-const statEls = document.querySelectorAll(".stat-number");
-const statObserver = new IntersectionObserver(
-  entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        animateCount(entry.target);
-        statObserver.unobserve(entry.target);
-      }
+  componentWillUnmount() { clearInterval(this.loop); }
+  renderVals() {
+    const st = this.state, V = this.V, D = this.D || { news: [] };
+    const shell = window.dpShellVals ? window.dpShellVals(this) : {};
+    const lab = st.hov === 'lab', kit = st.hov === 'kitchen', INK = 'oklch(0.2 0.01 260)';
+    return Object.assign(shell, {
+            track: e => this.setState(s => ({ x: e.clientX, y: e.clientY, vx: Math.max(-8, Math.min(8, (e.clientX - s.x) * 0.6)) })),
+      hoverLab: () => this.setState({ hov: 'lab' }), hoverKitchen: () => this.setState({ hov: 'kitchen' }), hoverNone: () => this.setState({ hov: null }),
+      labBg: lab ? 'oklch(0.985 0.004 90)' : 'oklch(0.975 0.006 90 / 0)', labFg: lab ? 'oklch(0.45 0.15 255)' : INK,
+      labLines: lab ? 'repeating-linear-gradient(to bottom,transparent 0 31px,oklch(0.45 0.15 255 / 0.12) 31px 32px)' : 'none', labShift: lab ? '24px' : '0px', labRot: lab ? '45deg' : '0deg',
+      kitBg: kit ? 'oklch(0.93 0.04 70)' : 'oklch(0.975 0.006 90 / 0)', kitFg: kit ? 'oklch(0.45 0.13 45)' : INK,
+      kitCheck: kit ? 'linear-gradient(45deg,oklch(0.99 0.01 80 / 0.4) 25%,transparent 25%,transparent 75%,oklch(0.99 0.01 80 / 0.4) 75%),linear-gradient(45deg,oklch(0.99 0.01 80 / 0.4) 25%,transparent 25%,transparent 75%,oklch(0.99 0.01 80 / 0.4) 75%)' : 'none', kitShift: kit ? '-24px' : '0px', kitRot: kit ? '-45deg' : '0deg',
+      showPreview: lab || kit, px: st.x + 'px', py: st.y + 'px', tilt: st.vx + 'deg', offX: kit ? 'calc(-100% - 24px)' : '24px',
+      previewBorder: lab ? 'oklch(0.45 0.15 255)' : 'oklch(0.55 0.14 50)', previewInner: lab ? 'oklch(0.17 0.02 200)' : 'oklch(0.95 0.03 70)', previewRatio: lab ? '600/220' : '200/150',
+      previewViz: V && (lab || kit) ? (lab ? V.scope('proton', 'oklch(0.68 0.19 30)', st.fault) : V.dough('oklch(0.6 0.14 55)', st.proof)) : null,
+      previewCap: lab ? 'Fig. 1 · telemetry, fault flagged' : 'Proofing · the baking game'
     });
-  },
-  { threshold: 0.5 }
-);
-statEls.forEach(el => statObserver.observe(el));
-
-// Light/dark toggle (light is the default; the choice is remembered)
-const themeToggle = document.getElementById("theme-toggle");
-function syncThemeLabel() {
-  const dark = document.documentElement.classList.contains("dark");
-  themeToggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+  }
 }
-syncThemeLabel();
-themeToggle.addEventListener("click", () => {
-  const dark = document.documentElement.classList.toggle("dark");
-  try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
-  syncThemeLabel();
-});
-
-// Publication tabs: show one panel at a time and label each tab with its paper count
-const pubTabs = document.querySelectorAll(".pub-tab");
-pubTabs.forEach(tab => {
-  const panel = document.getElementById(tab.dataset.panel);
-  tab.querySelector(".pub-count").textContent = `(${panel.children.length})`;
-  tab.addEventListener("click", () => {
-    pubTabs.forEach(t => {
-      const selected = t === tab;
-      t.setAttribute("aria-selected", selected);
-      document.getElementById(t.dataset.panel).hidden = !selected;
-    });
-  });
-});
-
-// News "Show more" toggle
-const newsList = document.getElementById("news-list");
-const newsToggle = document.getElementById("news-toggle");
-if (!newsList.querySelector(".news-extra")) newsToggle.hidden = true;
-newsToggle.addEventListener("click", () => {
-  const expanded = newsList.classList.toggle("news-expanded");
-  newsToggle.textContent = expanded ? "Show less ↑" : "Show more ↓";
-});
 </script>
-
 </body>
 </html>
